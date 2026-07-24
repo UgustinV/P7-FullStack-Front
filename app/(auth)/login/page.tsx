@@ -1,46 +1,54 @@
 'use client'
 
 import { useActionState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { login } from '@/app/actions/auth'
+import { ErrorMessage } from '@/components/ErrorMessage'
+import { FormField } from '@/components/FormField'
+import { Button } from '@/components/Button'
 
 export default function Login() {
     const [state, action, pending] = useActionState(login, undefined)
 
     return (
-        <div>
-            <h1>Connexion</h1>
-            {state?.message && <p>{state.message}</p>}
-            <form action={action}>
-                <div>
-                <label htmlFor="email">Email</label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="email@exemple.com"
-                    required
-                />
-                {state?.errors?.email && <p>{state.errors.email.join(', ')}</p>}
+        <div className="min-h-screen min-w-full bg-[url(/LogIn.jpg)] bg-cover bg-center">
+            <div className="flex flex-col justify-around items-center h-screen w-140 px-35 bg-(--color-background) rounded shadow-md text-sm relative">
+                <Image src="/logo.svg" alt="Login" width={252} height={32} />
+                {state?.message && <ErrorMessage message={state.message} />}
+                <div className="flex flex-col justify-center items-center w-full gap-7">
+                    <h1 className="text-[40px] font-bold text-(--dark-orange)">Connexion</h1>
+                    <form action={action} className="flex flex-col items-center gap-7 w-full">
+                        <FormField
+                            label="Email"
+                            id="email"
+                            type="email"
+                            name="email"
+                            required
+                            error={state?.errors?.email}
+                        />
+                        <FormField
+                            label="Mot de passe"
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            error={state?.errors?.password}
+                        />
+                        <Button
+                            style="w-7/8 py-3"
+                            content={pending ? 'Connexion...' : 'Se connecter'}
+                        />
+                    </form>
+                    <p>
+                        <Link className='text-(--dark-orange) underline' href="/forgot-password">Mot de passe oublié ?</Link>
+                    </p>
                 </div>
-                <div>
-                <label htmlFor="password">Mot de passe</label>
-                <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                />
-                {state?.errors?.password && <p>{state.errors.password.join(', ')}</p>}
-                </div>
-                <button type="submit" disabled={pending}>
-                {pending ? 'Connexion...' : 'Se connecter'}
-                </button>
-            </form>
-            <p>
-                Pas encore de compte ?{' '}
-                <Link href="/signup">S&apos;inscrire</Link>
-            </p>
+                <p className="flex flex-row gap-2">
+                    Pas encore de compte ?
+                    <Link className='text-(--dark-orange) underline' href="/signup">Créer un compte</Link>
+                </p>
+            </div>
         </div>
     )
 }

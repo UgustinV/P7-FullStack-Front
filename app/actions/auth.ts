@@ -17,7 +17,7 @@ export type AuthFormState =
     | undefined
 
 export async function login(
-    state: AuthFormState,
+    _state: AuthFormState,
     formData: FormData
 ): Promise<AuthFormState> {
     const email = formData.get('email') as string
@@ -47,7 +47,7 @@ export async function login(
 }
 
 export async function signup(
-    state: AuthFormState,
+    _state: AuthFormState,
     formData: FormData
 ): Promise<AuthFormState> {
     const name = formData.get('name') as string

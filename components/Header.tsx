@@ -22,7 +22,7 @@ export function Header() {
                     <MenuItem href="/projects" logo="/projects.svg" text="Projets" isActive={usePathname() === "/projects"} />
                 </div>
                 <Link href="/account">
-                    <span className={`flex items-center justify-center w-16.25 h-16.25 rounded-full ${usePathname() === "/account" ? "bg-[#D3590B]" : "bg-[#FFE8D9]"}`}>AD</span>
+                    <span className={`flex items-center justify-center w-16.25 h-16.25 rounded-full ${usePathname() === "/account" ? "bg-(--dark-orange) text-white" : "bg-(--light-orange)"}`}>AD</span>
                 </Link>
             </nav>
         </header>

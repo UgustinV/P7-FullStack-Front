@@ -1,63 +1,61 @@
 'use client'
 
+import Image from 'next/image'
 import { useActionState } from 'react'
 import Link from 'next/link'
 import { signup } from '@/app/actions/auth'
+import { ErrorMessage } from '@/components/ErrorMessage'
+import { FormField } from '@/components/FormField'
+import { Button } from '@/components/Button'
 
 export default function Signup() {
     const [state, action, pending] = useActionState(signup, undefined)
 
     return (
-        <div>
-            <h1>Inscription</h1>
-            {state?.message && <p>{state.message}</p>}
-            <form action={action}>
-                <div>
-                <label htmlFor="name">Nom</label>
-                <input
-                    id="name"
-                    name="name"
-                    type="text"
-                    placeholder="John Doe"
-                    required
-                />
-                {state?.errors?.name && <p>{state.errors.name.join(', ')}</p>}
+        <div className="min-h-screen min-w-full bg-[url(/LogIn.jpg)] bg-cover bg-center">
+            <div className="flex flex-col justify-around items-center h-screen w-140 px-35 bg-(--color-background) rounded shadow-md text-sm relative">
+                <Image src="/logo.svg" alt="Login" width={252} height={32} />
+                {state?.message && <ErrorMessage message={state.message} />}
+                <div className="flex flex-col justify-center items-center w-full">
+                    <h1 className="text-[40px] font-bold mb-7 text-(--dark-orange)">Inscription</h1>
+                    <form action={action} className="flex flex-col items-center gap-5 w-full">
+                        <FormField
+                            label="Nom"
+                            id="name"
+                            type="text"
+                            name="name"
+                            placeholder="John Doe"
+                            required
+                            error={state?.errors?.name}
+                        />
+                        <FormField
+                            label="Email"
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="email@exemple.com"
+                            required
+                            error={state?.errors?.email}
+                        />
+                        <FormField
+                            label="Mot de passe"
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            error={state?.errors?.password}
+                        />
+                        <Button
+                            style="w-7/8 py-3"
+                            content={pending ? 'Inscription...' : 'S\'inscrire'}
+                        />
+                    </form>
                 </div>
-                <div>
-                <label htmlFor="email">Email</label>
-                <input
-                    id="email"
-                    name="email"
-                    type="email"
-                    placeholder="email@exemple.com"
-                    required
-                />
-                {state?.errors?.email && <p>{state.errors.email.join(', ')}</p>}
-                </div>
-                <div>
-                <label htmlFor="password">Mot de passe</label>
-                <input
-                    id="password"
-                    name="password"
-                    type="password"
-                    required
-                />
-                {state?.errors?.password && (
-                    <ul>
-                    {state.errors.password.map((err) => (
-                        <li key={err}>{err}</li>
-                    ))}
-                    </ul>
-                )}
-                </div>
-                <button type="submit" disabled={pending}>
-                {pending ? 'Inscription...' : "S'inscrire"}
-                </button>
-            </form>
-            <p>
-                Déjà un compte ?{' '}
-                <Link href="/login">Se connecter</Link>
-            </p>
+                <p className="flex flex-row gap-2">
+                    Déjà inscrit ?
+                    <Link className='text-(--dark-orange) underline' href="/login">Se connecter</Link>
+                </p>
+            </div>
         </div>
     )
 }
