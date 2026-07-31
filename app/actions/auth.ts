@@ -1,91 +1,97 @@
 'use server'
-
+import { SignupFormSchema, FormState } from '@/app/lib/definitions'
+import { createSession, deleteSession } from '@/app/lib/session'
+import bcrypt from 'bcryptjs'
 import { redirect } from 'next/navigation'
-import { createSession, deleteSession } from '@/lib/session'
+ 
+export async function signup(_state: FormState, formData: FormData) {
+    const API_URL = process.env.API_URL
+    const validatedFields = SignupFormSchema.safeParse({
+        name: formData.get('name'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+    })
 
-const API_URL = process.env.API_URL ?? 'http://localhost:8000'
-
-export type AuthFormState =
-    | {
-        errors?: {
-            name?: string[]
-            email?: string[]
-            password?: string[]
+    if (!validatedFields.success) {
+        return {
+            errors: validatedFields.error.flatten().fieldErrors,
         }
-        message?: string
-        }
-    | undefined
-
-export async function login(
-    _state: AuthFormState,
-    formData: FormData
-): Promise<AuthFormState> {
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    let token: string
-    try {
-        const response = await fetch(`${API_URL}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
-        })
-
-        const data = await response.json()
-
-        if (!response.ok) {
-        return { message: data.message ?? 'Identifiants invalides.' }
-        }
-
-        token = data.data.token
-    } catch {
-        return { message: 'Une erreur est survenue. Veuillez réessayer.' }
     }
-
-    await createSession(token)
-    redirect('/dashboard')
-}
-
-export async function signup(
-    _state: AuthFormState,
-    formData: FormData
-): Promise<AuthFormState> {
-    const name = formData.get('name') as string
-    const email = formData.get('email') as string
-    const password = formData.get('password') as string
-
-    let token: string
+    const { name, email, password } = validatedFields.data
+    const hashedPassword = await bcrypt.hash(password, 10)
     try {
         const response = await fetch(`${API_URL}/auth/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password }),
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password: hashedPassword }),
         })
 
         const data = await response.json()
 
         if (!response.ok) {
-        if (data.details?.length) {
-            const errors: NonNullable<AuthFormState>['errors'] = {}
-            for (const detail of data.details as { field: string; message: string }[]) {
-            const field = detail.field as keyof typeof errors
-            errors[field] = [...(errors[field] ?? []), detail.message]
+            if (data.details?.length) {
+                const errors: NonNullable<FormState>['errors'] = {}
+                for (const detail of data.details as { field: string; message: string }[]) {
+                    const field = detail.field as keyof typeof errors
+                    errors[field] = [...(errors[field] ?? []), detail.message]
+                }
+                return { errors, message: data.message }
             }
-            return { errors, message: data.message }
-        }
-        return { message: data.message ?? 'Une erreur est survenue.' }
+            return { message: data.message ?? 'Une erreur est survenue.' }
         }
 
-        token = data.data.token
+        const user = data.data
+        if (!user) {
+            return {
+            message: 'Une erreur est survenue lors de la création de compte. Veuillez réessayer.',
+            }
+        }
+        await createSession(user.token)
+        return redirect('/dashboard')
     } catch {
         return { message: 'Une erreur est survenue. Veuillez réessayer.' }
     }
-
-    await createSession(token)
-    redirect('/dashboard')
 }
 
-export async function logout(): Promise<void> {
+export async function login(_state: FormState, formData: FormData) {
+    const API_URL = process.env.API_URL
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
+
+    try {
+        const response = await fetch(`${API_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+        })
+
+        const data = await response.json()
+
+        if (!response.ok) {
+            if (data.details?.length) {
+                const errors: NonNullable<FormState>['errors'] = {}
+                for (const detail of data.details as { field: string; message: string }[]) {
+                    const field = detail.field as keyof typeof errors
+                    errors[field] = [...(errors[field] ?? []), detail.message]
+                }
+                return { errors, message: data.message }
+            }
+            return { message: data.message ?? 'Une erreur est survenue.' }
+        }
+        const user = data.data
+        if (!user) {
+            return {
+            message: 'Une erreur est survenue lors de la création de compte. Veuillez réessayer.',
+            }
+        }
+        await createSession(user.token)
+    } catch {
+        return { message: 'Une erreur est survenue. Veuillez réessayer.' }
+    }
+    return redirect('/dashboard')
+}
+
+export async function logout() {
     await deleteSession()
-    redirect('/login')
+    return redirect('/login')
 }

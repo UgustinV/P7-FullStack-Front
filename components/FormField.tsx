@@ -1,3 +1,5 @@
+import { ErrorMessage } from './ErrorMessage'
+
 export function FormField({ label, id, type, name, placeholder, required, error }: {
     label: string,
     id: string,
@@ -18,7 +20,7 @@ export function FormField({ label, id, type, name, placeholder, required, error 
                 required={required}
                 className="border border-(--form-grey) rounded px-3 py-3 mb-2"
             />
-            {error && <p>{error.join(', ')}</p>}
+            {error && <ErrorMessage message={error.join(', ')} />}
         </div>
     )
 }
