@@ -79,7 +79,7 @@ export type Task = {
 
 export type ProjectMember = {
     id: string
-    role: 'OWNER' | 'MEMBER' // only OWNER seen in the sample, adjust if there are more roles
+    role: 'OWNER' | 'ADMIN' | 'CONTRIBUTOR'
     user: User
     joinedAt: string
 }
@@ -92,14 +92,89 @@ export type Project = {
     owner: User
     members: ProjectMember[]
     tasks?: Task[]
+    userRole?: ProjectMember['role']
     createdAt: string
     updatedAt: string
 }
 
-// Display label for every status; CANCELLED is excluded from the board columns (see Kanban.tsx)
+export const CreateProjectFormSchema = z.object({
+    name: z.string().min(2, { error: 'Le nom doit contenir au moins 2 caractères.' }).trim(),
+    description: z.string().trim().optional(),
+    contributors: z.array(z.email({ error: 'Email invalide.' })).optional(),
+})
+
+export type ProjectFormState =
+| {
+    errors?: {
+        name?: string[]
+        description?: string[]
+        contributors?: string[]
+    }
+    message?: string
+    success?: boolean
+}
+| undefined
+
+
+export const UpdateProjectFormSchema = z.object({
+    name: z.string().min(2, { error: 'Le nom doit contenir au moins 2 caractères.' }).trim().optional(),
+    description: z.string().trim().optional(),
+})
+
+export type ContributorFormState =
+| {
+    errors?: {
+        email?: string[]
+        role?: string[]
+    }
+    message?: string
+    success?: boolean
+}
+| undefined
+
 export const STATUS_LABELS: Record<TaskStatus, string> = {
     TODO: 'A faire',
     IN_PROGRESS: 'En cours',
     DONE: 'Terminés',
     CANCELLED: 'Annulée',
 }
+
+export const CreateTaskFormSchema = z.object({
+    title: z.string().min(2, { error: 'Le titre doit contenir au moins 2 caractères.' }).trim(),
+    description: z.string().trim().optional(),
+    priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
+    dueDate: z.string().trim().optional(),
+    assigneeIds: z.array(z.string()).optional(),
+})
+
+export const UpdateTaskFormSchema = z.object({
+    title: z.string().min(2, { error: 'Le titre doit contenir au moins 2 caractères.' }).trim().optional(),
+    description: z.string().trim().optional(),
+    status: z.enum(['TODO', 'IN_PROGRESS', 'DONE', 'CANCELLED']).optional(),
+    priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
+    dueDate: z.string().trim().optional(),
+    assigneeIds: z.array(z.string()).optional(),
+})
+
+export type TaskFormState =
+| {
+    errors?: {
+        title?: string[]
+        description?: string[]
+        priority?: string[]
+        dueDate?: string[]
+        assigneeIds?: string[]
+        status?: string[]
+    }
+    message?: string
+    success?: boolean
+}
+| undefined
+
+export type CommentFormState =
+| {
+    errors?: { content?: string[] }
+    message?: string
+    success?: boolean
+}
+| undefined

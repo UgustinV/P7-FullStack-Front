@@ -4,9 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { MenuItem } from "@/components/MenuItem";
 import { usePathname } from "next/navigation";
+import { getInitials } from "@/app/lib/utils";
 
-
-export function Header() {
+export function Header({ name }: { name?: string }) {
     return (
         <header className="h-24 flex items-center px-25 shadow-lg/3">
             <nav className="flex items-center justify-between w-full">
@@ -22,7 +22,9 @@ export function Header() {
                     <MenuItem href="/projects" logo="/projects.svg" text="Projets" isActive={usePathname() === "/projects"} />
                 </div>
                 <Link href="/account">
-                    <span className={`flex items-center justify-center w-16.25 h-16.25 rounded-full ${usePathname() === "/account" ? "bg-(--dark-orange) text-white" : "bg-(--light-orange)"}`}>AV</span>
+                    <span className={`flex items-center justify-center w-16.25 h-16.25 rounded-full ${usePathname() === "/account" ? "bg-(--dark-orange) text-white" : "bg-(--light-orange)"}`}>
+                        {name ? getInitials(name) : ''}
+                    </span>
                 </Link>
             </nav>
         </header>

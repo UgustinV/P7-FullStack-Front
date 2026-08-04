@@ -1,9 +1,20 @@
 import { TaskCard } from '@/components/TaskCard'
-import { Task } from '@/app/lib/definitions'
+import { Task, ProjectMember } from '@/app/lib/definitions'
 import Image from 'next/image'
-export function List({ tasks }: { tasks: Task[] }) {
+
+export function List({
+    tasks,
+    members,
+    canManageTasks,
+    currentUserId,
+}: {
+    tasks: Task[]
+    members: ProjectMember[]
+    canManageTasks: boolean
+    currentUserId?: string
+}) {
     return (
-        <div className="flex flex-col w-full gap-4 bg-white rounded-[10px] px-15 py-10 border border-(--form-grey)">
+        <div className="flex flex-col w-full gap-4">
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col gap-1.5 mb-4">
                     <h2 className="text-lg font-semibold">Mes tâches assignées</h2>
@@ -27,7 +38,7 @@ export function List({ tasks }: { tasks: Task[] }) {
                 </div>
             </div>
             {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} />
+                <TaskCard key={task.id} task={task} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} />
             ))}
         </div>
     )

@@ -1,8 +1,12 @@
+import Link from 'next/link'
 import { Project } from '@/app/lib/definitions'
 
 export function ProjectCard({ project }: { project: Project }) {
     return (
-        <div className="flex flex-col gap-2 rounded-[10px] border border-(--form-grey) p-4">
+        <Link
+            href={`/projects/${project.id}`}
+            className="flex flex-col gap-2 rounded-[10px] border border-(--form-grey) p-4 hover:shadow-md transition-shadow"
+        >
             <h3 className="font-semibold">{project.name}</h3>
             <p className="text-sm text-(--neutral-grey)">{project.description}</p>
             <div className="flex items-center justify-between text-xs text-(--neutral-grey)">
@@ -19,6 +23,6 @@ export function ProjectCard({ project }: { project: Project }) {
                     ))}
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }

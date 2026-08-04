@@ -1,6 +1,6 @@
 import { getUser, getAssignedTasks } from '@/app/lib/dal'
 import { TaskView } from '@/components/TaskView'
-import { Button } from '@/components/Button'
+import { CreateProjectModal } from '@/components/CreateProjectModal'
 
 export default async function DashboardPage() {
     const user = await getUser()
@@ -13,10 +13,7 @@ export default async function DashboardPage() {
                     <h2>Bonjour {user?.user.name}, voici un aperçu de vos projets et tâches</h2>
                 </div>
                 <div>
-                    <Button
-                        style="px-6 py-4 text-sm"
-                        content='+ Créer un projet'
-                    />
+                    <CreateProjectModal />
                 </div>
             </div>
             <TaskView tasks={tasks} />

@@ -4,11 +4,21 @@ import { useState } from 'react'
 import Image from 'next/image'
 import { Kanban } from '@/components/Kanban'
 import { List } from '@/components/List'
-import { Task } from '@/app/lib/definitions'
+import { Task, ProjectMember } from '@/app/lib/definitions'
 
 type View = 'kanban' | 'list'
 
-export function TaskView({ tasks }: { tasks: Task[] }) {
+export function TaskView({
+    tasks,
+    members = [],
+    canManageTasks = false,
+    currentUserId,
+}: {
+    tasks: Task[]
+    members?: ProjectMember[]
+    canManageTasks?: boolean
+    currentUserId?: string
+}) {
     const [view, setView] = useState<View>('list')
 
     return (
@@ -29,7 +39,9 @@ export function TaskView({ tasks }: { tasks: Task[] }) {
                     <span>Kanban</span>
                 </button>
             </div>
-            {view === 'kanban' ? <Kanban tasks={tasks} /> : <List tasks={tasks} />}
+            {view === 'kanban'
+                ? <Kanban tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} />
+                : <List tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} />}
         </div>
     )
 }

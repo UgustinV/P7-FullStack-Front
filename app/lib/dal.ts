@@ -82,3 +82,71 @@ export const getProjectsWithTasks = cache(async (): Promise<Project[]> => {
         return []
     }
 })
+
+export const getProjects = cache(async (): Promise<Project[]> => {
+    const API_URL = process.env.API_URL
+    const session = await verifySession()
+    if (!session) return []
+
+    try {
+        const response = await fetch(`${API_URL}/projects`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`,
+            },
+        })
+
+        const data = await response.json()
+        return data.data?.projects ?? []
+    } catch (error) {
+        console.log('Failed to fetch projects')
+        return []
+    }
+})
+
+export const getProjectTasks = cache(async (projectId: string): Promise<Task[]> => {
+    const API_URL = process.env.API_URL
+    const session = await verifySession()
+    if (!session) return []
+
+    try {
+        const response = await fetch(`${API_URL}/projects/${projectId}/tasks`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`,
+            },
+        })
+
+        const data = await response.json()
+        return data.data?.tasks ?? []
+    } catch (error) {
+        console.log('Failed to fetch project tasks')
+        return []
+    }
+})
+
+export const getProject = cache(async (projectId: string): Promise<Project | null> => {
+    const API_URL = process.env.API_URL
+    const session = await verifySession()
+    if (!session) return null
+
+    try {
+        const response = await fetch(`${API_URL}/projects/${projectId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`,
+            },
+        })
+
+        if (!response.ok) return null
+
+        const data = await response.json()
+        return data.data?.project ?? null
+    } catch (error) {
+        console.log('Failed to fetch project')
+        return null
+    }
+})

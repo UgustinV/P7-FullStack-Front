@@ -1,10 +1,12 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { getUser } from "@/app/lib/dal";
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+export default async function Layout({ children }: { children: React.ReactNode }) {
+  const user = await getUser();
   return (
     <>
-        <Header />
+        <Header name={user?.user.name} />
         <main className="flex-1">
             {children}
         </main>

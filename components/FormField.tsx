@@ -1,13 +1,14 @@
 import { ErrorMessage } from '@/components/ErrorMessage'
 
-export function FormField({ label, id, type, name, placeholder, required, error }: {
+export function FormField({ label, id, type, name, placeholder, required, error, defaultValue }: {
     label: string,
     id: string,
     type: string,
     name: string,
     placeholder?: string,
     required?: boolean,
-    error?: string[]
+    error?: string[],
+    defaultValue?: string
 }) {
     return (
         <div className="flex flex-col w-full">
@@ -18,6 +19,7 @@ export function FormField({ label, id, type, name, placeholder, required, error 
                 type={type}
                 placeholder={placeholder}
                 required={required}
+                defaultValue={defaultValue}
                 className="border border-(--form-grey) rounded px-3 py-3 mb-2"
             />
             {error && <ErrorMessage message={error.join(', ')} />}

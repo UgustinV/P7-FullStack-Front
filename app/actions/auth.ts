@@ -18,12 +18,11 @@ export async function signup(_state: FormState, formData: FormData) {
         }
     }
     const { name, email, password } = validatedFields.data
-    const hashedPassword = await bcrypt.hash(password, 10)
     try {
         const response = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email, password: hashedPassword }),
+            body: JSON.stringify({ name, email, password }),
         })
 
         const data = await response.json()
@@ -35,7 +34,7 @@ export async function signup(_state: FormState, formData: FormData) {
                     const field = detail.field as keyof typeof errors
                     errors[field] = [...(errors[field] ?? []), detail.message]
                 }
-                return { errors, message: data.message }
+                return { errors, message: data.message ?? 'Veuillez corriger les champs invalides.' }
             }
             return { message: data.message ?? 'Une erreur est survenue.' }
         }
