@@ -1,23 +1,25 @@
-import { getUser } from '@/app/lib/dal'
+import { getUser, getAssignedTasks } from '@/app/lib/dal'
+import { TaskView } from '@/components/TaskView'
+import { Button } from '@/components/Button'
+
 export default async function DashboardPage() {
     const user = await getUser()
+    const tasks = await getAssignedTasks()
     return (
-        <div>
-            <div>
-                <h1>Tableau de bord</h1>
-                <h2>Bonjour {user?.user.name}, voici un aperçu de vos projets et tâches</h2>
+        <div className='mx-25'>
+            <div className='flex justify-between items-center mt-23 mb-15'>
+                <div className='flex flex-col gap-3.5'>
+                    <h1 className='text-2xl font-semibold'>Tableau de bord</h1>
+                    <h2>Bonjour {user?.user.name}, voici un aperçu de vos projets et tâches</h2>
+                </div>
+                <div>
+                    <Button
+                        style="px-6 py-4 text-sm"
+                        content='+ Créer un projet'
+                    />
+                </div>
             </div>
-            <div className="flex flex-row justify-around items-start gap-5">
-                <section>
-                    <h3>A faire</h3>
-                </section>
-                <section>
-                    <h3>En cours</h3>
-                </section>
-                <section>
-                    <h3>Terminés</h3>
-                </section>
-            </div>
+            <TaskView tasks={tasks} />
         </div>
     )
 }

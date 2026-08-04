@@ -22,7 +22,6 @@ export default function Signup() {
                             id="name"
                             type="text"
                             name="name"
-                            placeholder="John Doe"
                             required
                             error={state?.errors?.name}
                         />
@@ -31,7 +30,6 @@ export default function Signup() {
                             id="email"
                             type="email"
                             name="email"
-                            placeholder="email@exemple.com"
                             required
                             error={state?.errors?.email}
                         />

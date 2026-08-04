@@ -1,5 +1,6 @@
 import 'server-only'
 import { cache } from 'react'
+import type { Task, Project } from '@/app/lib/definitions'
 import { redirect } from 'next/navigation'
  
 import { cookies } from 'next/headers'
@@ -22,7 +23,6 @@ export const getUser = cache(async () => {
     if (!session) return null
     
     try {
-        console.log(session.token)
         const response = await fetch(`${API_URL}/auth/profile`, {
             method: 'GET',
             headers: {
@@ -36,5 +36,49 @@ export const getUser = cache(async () => {
     } catch (error) {
         console.log('Failed to fetch user')
         return null
+    }
+})
+
+export const getAssignedTasks = cache(async (): Promise<Task[]> => {
+    const API_URL = process.env.API_URL
+    const session = await verifySession()
+    if (!session) return []
+
+    try {
+        const response = await fetch(`${API_URL}/dashboard/assigned-tasks`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`,
+            },
+        })
+
+        const data = await response.json()
+        return data.data?.tasks ?? []
+    } catch (error) {
+        console.log('Failed to fetch assigned tasks')
+        return []
+    }
+})
+
+export const getProjectsWithTasks = cache(async (): Promise<Project[]> => {
+    const API_URL = process.env.API_URL
+    const session = await verifySession()
+    if (!session) return []
+
+    try {
+        const response = await fetch(`${API_URL}/dashboard/projects-with-tasks`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`,
+            },
+        })
+
+        const data = await response.json()
+        return data.data?.projects ?? []
+    } catch (error) {
+        console.log('Failed to fetch projects with tasks')
+        return []
     }
 })

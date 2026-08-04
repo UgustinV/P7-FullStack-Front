@@ -11,6 +11,7 @@
     --error-red-light: #FFE0E0;
     --form-grey: #E5E7EB;
     --button-grey: #1F1F1F;
+    --neutral-grey: #6B7280;
 }
 
 @theme inline {

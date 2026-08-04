@@ -1,4 +1,4 @@
-import { ErrorMessage } from './ErrorMessage'
+import { ErrorMessage } from '@/components/ErrorMessage'
 
 export function FormField({ label, id, type, name, placeholder, required, error }: {
     label: string,

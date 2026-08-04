@@ -1,0 +1,35 @@
+"use client"
+
+import { useState } from 'react'
+import Image from 'next/image'
+import { Kanban } from '@/components/Kanban'
+import { List } from '@/components/List'
+import { Task } from '@/app/lib/definitions'
+
+type View = 'kanban' | 'list'
+
+export function TaskView({ tasks }: { tasks: Task[] }) {
+    const [view, setView] = useState<View>('list')
+
+    return (
+        <div className="flex flex-col w-full gap-7.5 mb-12">
+            <div className="flex flex-row gap-4">
+                <button
+                    onClick={() => setView('list')}
+                    className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'list' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
+                >
+                    <Image src="/list-icon.svg" alt="Liste" width={16} height={16} />
+                    <span>Liste</span>
+                </button>
+                <button
+                    onClick={() => setView('kanban')}
+                    className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'kanban' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
+                >
+                    <Image src="/kanban-icon.svg" alt="Kanban" width={16} height={16} />
+                    <span>Kanban</span>
+                </button>
+            </div>
+            {view === 'kanban' ? <Kanban tasks={tasks} /> : <List tasks={tasks} />}
+        </div>
+    )
+}

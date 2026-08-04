@@ -47,10 +47,10 @@ export async function signup(_state: FormState, formData: FormData) {
             }
         }
         await createSession(user.token)
-        return redirect('/dashboard')
     } catch {
         return { message: 'Une erreur est survenue. Veuillez réessayer.' }
     }
+    return redirect('/dashboard')
 }
 
 export async function login(_state: FormState, formData: FormData) {
