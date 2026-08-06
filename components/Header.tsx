@@ -19,7 +19,7 @@ export function Header({ name }: { name?: string }) {
                 </Link>
                 <div className="flex gap-4">
                     <MenuItem href="/dashboard" logo="/dashboard.svg" text="Tableau de bord" isActive={usePathname() === "/dashboard"} />
-                    <MenuItem href="/projects" logo="/projects.svg" text="Projets" isActive={usePathname() === "/projects"} />
+                    <MenuItem href="/projects" logo="/projects.svg" text="Projets" isActive={usePathname().startsWith("/projects")} />
                 </div>
                 <Link href="/account">
                     <span className={`flex items-center justify-center w-16.25 h-16.25 rounded-full ${usePathname() === "/account" ? "bg-(--dark-orange) text-white" : "bg-(--light-orange)"}`}>

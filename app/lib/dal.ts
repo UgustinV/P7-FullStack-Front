@@ -1,10 +1,10 @@
 import 'server-only'
 import { cache } from 'react'
 import type { Task, Project } from '@/app/lib/definitions'
-import { redirect } from 'next/navigation'
+import { redirect, unstable_rethrow } from 'next/navigation'
  
 import { cookies } from 'next/headers'
-import { decrypt } from '@/app/lib/session'
+import { decrypt, deleteSession } from '@/app/lib/session'
  
 export const verifySession = cache(async () => {
     const cookie = (await cookies()).get('session')?.value
@@ -31,9 +31,15 @@ export const getUser = cache(async () => {
             },
         })
 
+        if (response.status === 401) {
+            await deleteSession()
+            redirect('/login')
+        }
+
         const data = await response.json()
         return data.data
     } catch (error) {
+        unstable_rethrow(error)
         console.log('Failed to fetch user')
         return null
     }
@@ -53,9 +59,15 @@ export const getAssignedTasks = cache(async (): Promise<Task[]> => {
             },
         })
 
+        if (response.status === 401) {
+            await deleteSession()
+            redirect('/login')
+        }
+
         const data = await response.json()
         return data.data?.tasks ?? []
     } catch (error) {
+        unstable_rethrow(error)
         console.log('Failed to fetch assigned tasks')
         return []
     }
@@ -75,9 +87,15 @@ export const getProjectsWithTasks = cache(async (): Promise<Project[]> => {
             },
         })
 
+        if (response.status === 401) {
+            await deleteSession()
+            redirect('/login')
+        }
+
         const data = await response.json()
         return data.data?.projects ?? []
     } catch (error) {
+        unstable_rethrow(error)
         console.log('Failed to fetch projects with tasks')
         return []
     }
@@ -97,9 +115,15 @@ export const getProjects = cache(async (): Promise<Project[]> => {
             },
         })
 
+        if (response.status === 401) {
+            await deleteSession()
+            redirect('/login')
+        }
+
         const data = await response.json()
         return data.data?.projects ?? []
     } catch (error) {
+        unstable_rethrow(error)
         console.log('Failed to fetch projects')
         return []
     }
@@ -119,9 +143,15 @@ export const getProjectTasks = cache(async (projectId: string): Promise<Task[]> 
             },
         })
 
+        if (response.status === 401) {
+            await deleteSession()
+            redirect('/login')
+        }
+
         const data = await response.json()
         return data.data?.tasks ?? []
     } catch (error) {
+        unstable_rethrow(error)
         console.log('Failed to fetch project tasks')
         return []
     }
@@ -141,11 +171,17 @@ export const getProject = cache(async (projectId: string): Promise<Project | nul
             },
         })
 
+        if (response.status === 401) {
+            await deleteSession()
+            redirect('/login')
+        }
+
         if (!response.ok) return null
 
         const data = await response.json()
         return data.data?.project ?? null
     } catch (error) {
+        unstable_rethrow(error)
         console.log('Failed to fetch project')
         return null
     }
