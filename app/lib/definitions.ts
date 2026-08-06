@@ -135,13 +135,14 @@ export type ContributorFormState =
 export const STATUS_LABELS: Record<TaskStatus, string> = {
     TODO: 'A faire',
     IN_PROGRESS: 'En cours',
-    DONE: 'Terminés',
+    DONE: 'Terminée',
     CANCELLED: 'Annulée',
 }
 
 export const CreateTaskFormSchema = z.object({
     title: z.string().min(2, { error: 'Le titre doit contenir au moins 2 caractères.' }).trim(),
     description: z.string().trim().optional(),
+    status: z.enum(['TODO', 'IN_PROGRESS', 'DONE']).optional(),
     priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'URGENT']).optional(),
     dueDate: z.string().trim().optional(),
     assigneeIds: z.array(z.string()).optional(),

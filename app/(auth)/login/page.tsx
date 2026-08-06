@@ -14,7 +14,7 @@ export default function Login() {
     return (
         <div className="min-h-screen min-w-full bg-[url(/LogIn.jpg)] bg-cover bg-center">
             <div className="flex flex-col justify-around items-center h-screen w-140 px-35 bg-(--color-background) rounded shadow-md text-sm relative">
-                <Image src="/logo.svg" alt="Login" width={252} height={32} />
+                <Image src="/logo.svg" alt="Login" width={252} height={32} className="w-63 h-8" />
                 {state?.message && <ErrorMessage message={state.message} />}
                 <div className="flex flex-col justify-center items-center w-full gap-7">
                     <h1 className="text-[40px] font-bold text-(--dark-orange)">Connexion</h1>

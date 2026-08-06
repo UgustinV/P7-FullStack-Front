@@ -21,6 +21,7 @@ export function MenuItem({ href, logo, text, isActive }: MenuItemProps) {
             alt={text}
             width={20}
             height={20}
+            className="w-5 h-5"
         />
         <span className=" text-[16px]">{text}</span>
     </Link>

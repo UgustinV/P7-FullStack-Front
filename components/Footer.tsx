@@ -7,6 +7,7 @@ export function Footer() {
             alt="Logo"
             width={100}
             height={13}
+            className="w-25 h-3.25"
             />
             <p className="text-gray-600 text-sm">
                 Abricot {new Date().getFullYear()}

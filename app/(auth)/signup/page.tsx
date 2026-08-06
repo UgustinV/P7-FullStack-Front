@@ -13,7 +13,7 @@ export default function Signup() {
     return (
         <div className="min-h-screen min-w-full bg-[url(/LogIn.jpg)] bg-cover bg-center">
             <div className="flex flex-col justify-around items-center h-screen w-140 px-35 bg-(--color-background) rounded shadow-md text-sm relative">
-                <Image src="/logo.svg" alt="Login" width={252} height={32} />
+                <Image src="/logo.svg" alt="Login" width={252} height={32} className="w-63 h-8" />
                 <div className="flex flex-col justify-center items-center w-full">
                     <h1 className="text-[40px] font-bold mb-7 text-(--dark-orange)">Inscription</h1>
                     <form action={action} className="flex flex-col items-center gap-5 w-full">

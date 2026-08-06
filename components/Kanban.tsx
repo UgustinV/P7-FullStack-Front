@@ -8,11 +8,13 @@ export function Kanban({
     members,
     canManageTasks,
     currentUserId,
+    projects = {},
 }: {
     tasks: Task[]
     members: ProjectMember[]
     canManageTasks: boolean
     currentUserId?: string
+    projects?: Record<string, string>
 }) {
     return (
         <div className="flex flex-row w-full justify-around items-start gap-5">
@@ -24,6 +26,7 @@ export function Kanban({
                     members={members}
                     canManageTasks={canManageTasks}
                     currentUserId={currentUserId}
+                    projects={projects}
                 />
             ))}
         </div>

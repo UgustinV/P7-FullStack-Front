@@ -13,11 +13,13 @@ export function TaskView({
     members = [],
     canManageTasks = false,
     currentUserId,
+    projects = {},
 }: {
     tasks: Task[]
     members?: ProjectMember[]
     canManageTasks?: boolean
     currentUserId?: string
+    projects?: Record<string, string>
 }) {
     const [view, setView] = useState<View>('list')
 
@@ -28,20 +30,20 @@ export function TaskView({
                     onClick={() => setView('list')}
                     className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'list' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                 >
-                    <Image src="/list-icon.svg" alt="Liste" width={16} height={16} />
+                    <Image src="/list-icon.svg" alt="Liste" width={16} height={16} className="w-4 h-4" />
                     <span>Liste</span>
                 </button>
                 <button
                     onClick={() => setView('kanban')}
                     className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'kanban' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                 >
-                    <Image src="/kanban-icon.svg" alt="Kanban" width={16} height={16} />
+                    <Image src="/kanban-icon.svg" alt="Kanban" width={16} height={16} className="w-4 h-4" />
                     <span>Kanban</span>
                 </button>
             </div>
             {view === 'kanban'
-                ? <Kanban tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} />
-                : <List tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} />}
+                ? <Kanban tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />
+                : <List tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />}
         </div>
     )
 }

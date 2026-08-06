@@ -10,6 +10,7 @@ export async function createTask(projectId: string, _state: TaskFormState, formD
     const validatedFields = CreateTaskFormSchema.safeParse({
         title: formData.get('title'),
         description: formData.get('description'),
+        status: formData.get('status'),
         priority: formData.get('priority'),
         dueDate: formData.get('dueDate'),
         assigneeIds: formData.getAll('assigneeIds'),
@@ -18,7 +19,7 @@ export async function createTask(projectId: string, _state: TaskFormState, formD
     if (!validatedFields.success) {
         return { errors: validatedFields.error.flatten().fieldErrors }
     }
-    const { title, description, priority, dueDate, assigneeIds } = validatedFields.data
+    const { title, description, status, priority, dueDate, assigneeIds } = validatedFields.data
 
     try {
         const response = await fetch(`${API_URL}/projects/${projectId}/tasks`, {
@@ -27,7 +28,7 @@ export async function createTask(projectId: string, _state: TaskFormState, formD
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${session.token}`,
             },
-            body: JSON.stringify({ title, description, priority, dueDate, assigneeIds }),
+            body: JSON.stringify({ title, description, status, priority, dueDate, assigneeIds }),
         })
 
         const data = await response.json()

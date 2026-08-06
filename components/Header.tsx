@@ -15,6 +15,7 @@ export function Header({ name }: { name?: string }) {
                     alt="Logo"
                     width={150}
                     height={19}
+                    className="w-37.5 h-4.75"
                     />
                 </Link>
                 <div className="flex gap-4">

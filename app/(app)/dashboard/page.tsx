@@ -1,10 +1,12 @@
-import { getUser, getAssignedTasks } from '@/app/lib/dal'
+import { getUser, getAssignedTasks, getProjects } from '@/app/lib/dal'
 import { TaskView } from '@/components/TaskView'
 import { CreateProjectModal } from '@/components/CreateProjectModal'
 
 export default async function DashboardPage() {
     const user = await getUser()
     const tasks = await getAssignedTasks()
+    const projects = await getProjects()
+    const projectNames = Object.fromEntries(projects.map((p) => [p.id, p.name]))
     return (
         <div className='mx-25'>
             <div className='flex justify-between items-center mt-23 mb-15'>
@@ -16,7 +18,7 @@ export default async function DashboardPage() {
                     <CreateProjectModal />
                 </div>
             </div>
-            <TaskView tasks={tasks} />
+            <TaskView tasks={tasks} projects={projectNames} />
         </div>
     )
 }

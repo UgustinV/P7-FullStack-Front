@@ -64,6 +64,26 @@ export function CreateTaskModal({ projectId, members }: { projectId: string; mem
                                     ))}
                                 </div>
                             </div>
+                            <div className="flex flex-row w-full justify-between">
+                                <label htmlFor="todo" className="cursor-pointer">
+                                    <input id='todo' className='hidden peer' type="radio" name="status" value="TODO" defaultChecked />
+                                    <span className="flex items-center gap-2 text-sm text-(--error-red) bg-(--error-red-light) rounded px-3 py-3 peer-checked:border peer-checked:border-(--error-red)">
+                                        À faire
+                                    </span>
+                                </label>
+                                <label htmlFor="in-progress" className="cursor-pointer">
+                                    <input id='in-progress' className='hidden peer' type="radio" name="status" value="IN_PROGRESS" />
+                                    <span className="flex items-center gap-2 text-sm bg-(--success-green-light) rounded px-3 py-3 peer-checked:border peer-checked:border-(--success-green)">
+                                        En cours
+                                    </span>
+                                </label>
+                                <label htmlFor="done" className="cursor-pointer">
+                                    <input id='done' className='hidden peer' type="radio" name="status" value="DONE" />
+                                    <span className="flex items-center gap-2 text-sm text-(--success-green) bg-(--success-green-light) rounded px-3 py-3 peer-checked:border peer-checked:border-(--success-green)">
+                                        Terminée
+                                    </span>
+                                </label>
+                            </div>
                             <Button style="w-full py-3" content={pending ? 'Création...' : 'Créer la tâche'} />
                         </form>
                     </div>

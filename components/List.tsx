@@ -7,14 +7,16 @@ export function List({
     members,
     canManageTasks,
     currentUserId,
+    projects = {},
 }: {
     tasks: Task[]
     members: ProjectMember[]
     canManageTasks: boolean
     currentUserId?: string
+    projects?: Record<string, string>
 }) {
     return (
-        <div className="flex flex-col w-full gap-4">
+        <div className="flex flex-col w-full gap-4 bg-white rounded-lg px-15 py-10 border border-(--form-grey)">
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col gap-1.5 mb-4">
                     <h2 className="text-lg font-semibold">Mes tâches assignées</h2>
@@ -32,13 +34,13 @@ export function List({
                             alt="search icon"
                             width={16}
                             height={16}
-                            className="absolute right-[2vw] top-1/2 -translate-y-1/2"
+                            className="absolute right-[2vw] top-1/2 -translate-y-1/2 w-4 h-4"
                         />
                     </div>
                 </div>
             </div>
             {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} />
+                <TaskCard key={task.id} task={task} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />
             ))}
         </div>
     )

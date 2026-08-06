@@ -1,6 +1,7 @@
 'use client'
 
 import { useActionState, useState, useEffect } from 'react'
+import Image from 'next/image'
 import { updateTask, deleteTask, createComment, updateComment, deleteComment } from '@/app/actions/tasks'
 import { ErrorMessage } from '@/components/ErrorMessage'
 import { Button } from '@/components/Button'
@@ -13,39 +14,57 @@ const PRIORITY_LABELS: Record<TaskPriority, string> = {
     URGENT: 'Urgente',
 }
 
+const STATUS_STYLES: Record<Task['status'], string> = {
+    TODO: 'bg-(--error-red-light) text-(--error-red)',
+    IN_PROGRESS: 'bg-(--warning-orange-light) text-(--warning-orange)',
+    DONE: 'bg-(--success-green-light) text-(--success-green)',
+    CANCELLED: 'bg-(--success-green-light) text-(--success-green)',
+}
+
 export function TaskCard({
     task,
     members = [],
     canManageTasks = false,
     currentUserId,
+    projects = {},
 }: {
     task: Task
     members?: ProjectMember[]
     canManageTasks?: boolean
     currentUserId?: string
+    projects?: Record<string, string>
 }) {
     const [open, setOpen] = useState(false)
-    const dueDate = new Date(task.dueDate).toLocaleDateString('fr-FR')
-
+    const dueDate = new Date(task.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
     return (
-        <div className="flex flex-row justify-between gap-3 p-4 border border-(--form-grey) rounded-lg bg-white">
+        <div className="flex flex-row justify-between gap-4.5 px-10 py-6.25 border border-(--form-grey) rounded-lg bg-white">
             <div>
-                <div className="flex items-center justify-between">
-                    <h4 className="font-semibold">{task.title}</h4>
-                </div>
-                <p className="text-sm">{task.description}</p>
-                <div className="flex items-center justify-between text-xs text-(--form-grey)">
-                    <span>{dueDate}</span>
-                    <span>{task.comments.length} commentaire{task.comments.length > 1 ? 's' : ''}</span>
+                <h4 className="font-semibold text-lg mb-2">{task.title}</h4>
+                <p className="text-sm mb-8">{task.description}</p>
+                <div className="flex items-center gap-3.75 text-xs text-(--neutral-grey)">
+                    <div className="flex items-center gap-2">
+                        <Image src="/folder-icon.svg" alt="project icon" width={16} height={16} className="w-4 h-4" />
+                        <span>{projects[task.projectId] ?? task.projectId}</span>
+                    </div>
+                    <div className='border-r border-[#9CA3AF] h-2.75'></div>
+                    <div className="flex items-center gap-2">
+                        <Image src="/grey-calendar-icon.svg" alt="calendar icon" width={16} height={16} className="w-4 h-4" />
+                        <span>{dueDate}</span>
+                    </div>
+                    <div className='border-r border-[#9CA3AF] h-2.75'></div>
+                    <div className="flex items-center gap-2">
+                        <Image src="/comment-icon.svg" alt="comment icon" width={16} height={16} className="w-4 h-4" />
+                        <span>{task.comments.length}</span>
+                    </div>
                 </div>
             </div>
-            <div className="flex flex-col items-end gap-2">
-                <span className="text-xs rounded-full px-2 py-1 bg-(--light-orange)">
+            <div className="flex flex-col items-end justify-between gap-2">
+                <span className={`text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
                     {STATUS_LABELS[task.status]}
                 </span>
                 <button
                     onClick={() => setOpen(true)}
-                    className="px-3 py-1 rounded bg-foreground text-sm text-white cursor-pointer"
+                    className="px-12 py-3.75 rounded-[10px] bg-foreground text-[16px] text-white cursor-pointer"
                 >
                     Voir
                 </button>
