@@ -37,7 +37,7 @@ export function TaskView({
                     onClick={() => setView('kanban')}
                     className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'kanban' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                 >
-                    <Image src="/kanban-icon.svg" alt="Kanban" width={16} height={16} className="w-4 h-4" />
+                    <Image src="/calendar-icon.svg" alt="Kanban" width={16} height={16} className="w-4 h-4" />
                     <span>Kanban</span>
                 </button>
             </div>

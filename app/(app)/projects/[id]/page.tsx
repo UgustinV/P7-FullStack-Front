@@ -1,11 +1,13 @@
 import { notFound } from 'next/navigation'
 import { getProject, getProjectTasks, getUser } from '@/app/lib/dal'
-import { TaskView } from '@/components/TaskView'
+import Image from 'next/image'
+import { TaskEditView } from '@/components/TaskEditView'
 import { EditProjectModal } from '@/components/EditProjectModal'
 import { DeleteProjectButton } from '@/components/DeleteProjectButton'
 import { ContributorsManager } from '@/components/ContributorsManager'
 import { CreateTaskModal } from '@/components/CreateTaskModal'
-import { canEditProject, canDeleteProject, canManageContributors, canManageTasks, getAssignableMembers } from '@/app/lib/permissions'
+import { canEditProject, canDeleteProject, canManageContributors, canManageTasks, getAssignableMembers, getUserRole } from '@/app/lib/permissions'
+import Link from 'next/dist/client/link'
 
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
@@ -16,20 +18,29 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     }
 
     const tasks = await getProjectTasks(id)
-    const canEditTasks = canManageTasks(project.userRole)
+    const userRole = getUserRole(project, user?.user.id)
+    const canEditTasks = canManageTasks(userRole)
     const assignableMembers = getAssignableMembers(project)
 
     return (
-        <div>
-            <div className="flex flex-col gap-2 mb-4">
-                <div className="flex items-center justify-between">
-                    <h1>{project.name}</h1>
-                    <div className="flex items-center gap-4">
-                        {canEditProject(project.userRole) && <EditProjectModal project={project} />}
-                        {canDeleteProject(project.userRole) && <DeleteProjectButton projectId={project.id} />}
+        <div className="mx-25">
+            <div className="flex flex-col gap-3.5 mb-4 mt-23">
+                <div className="flex items-center justify-between mb-12.5">
+                    <div className="relative">
+                        <Link className="-translate-x-[calc(100%+16px)] top-0 absolute flex items-center px-4 py-5.5 mr-4 rounded-[10px] bg-white border border-(--form-grey)" href="/projects">
+                            <Image src="/back-arrow-icon.svg" alt="Back" width={24} height={12} className='h-3 w-6' />
+                        </Link>
+                        <div className="flex items-center gap-4">
+                            <h1 className='text-2xl font-semibold'>{project.name}</h1>
+                            <div className="flex items-center gap-4">
+                                {canEditProject(userRole) && <EditProjectModal project={project} />}
+                                {canDeleteProject(userRole) && <DeleteProjectButton projectId={project.id} />}
+                            </div>
+                        </div>
+                        <p className="text-(--neutral-grey) mt-3.5">{project.description}</p>
                     </div>
+                    {canEditTasks && <CreateTaskModal projectId={project.id} members={assignableMembers} />}
                 </div>
-                <p className="text-(--neutral-grey)">{project.description}</p>
                 <div className="flex items-center gap-4 text-sm text-(--neutral-grey)">
                     <span>Propriétaire : {project.owner.name}</span>
                     <div className="flex -space-x-2">
@@ -44,10 +55,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                         ))}
                     </div>
                 </div>
-                {canManageContributors(project.userRole) && <ContributorsManager project={project} />}
-                {canEditTasks && <CreateTaskModal projectId={project.id} members={assignableMembers} />}
+                {canManageContributors(userRole) && <ContributorsManager project={project} />}
             </div>
-            <TaskView
+            <TaskEditView
                 tasks={tasks}
                 members={assignableMembers}
                 canManageTasks={canEditTasks}

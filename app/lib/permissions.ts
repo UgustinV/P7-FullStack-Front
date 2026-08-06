@@ -33,3 +33,9 @@ export function getAssignableMembers(project: Project): ProjectMember[] {
         ...project.members,
     ]
 }
+
+export function getUserRole(project: Project, userId?: string): Role | undefined {
+    if (!userId) return undefined
+    if (project.ownerId === userId) return 'OWNER'
+    return project.members.find((member) => member.user.id === userId)?.role
+}
