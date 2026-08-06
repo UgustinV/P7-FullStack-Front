@@ -28,3 +28,23 @@ body {
     color: var(--foreground);
     font-family: Manrope, sans-serif;
 }
+
+.task-progress {
+    appearance: none;
+}
+
+.task-progress::-webkit-progress-bar {
+    background-color: var(--form-grey);
+    border-radius: 9999px;
+}
+
+.task-progress::-webkit-progress-value {
+    background-color: var(--dark-orange);
+    background-image: none;
+    border-radius: 9999px;
+}
+
+.task-progress::-moz-progress-bar {
+    background-color: var(--dark-orange);
+    border-radius: 9999px;
+}
