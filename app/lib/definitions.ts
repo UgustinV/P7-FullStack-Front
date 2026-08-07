@@ -179,3 +179,34 @@ export type CommentFormState =
     success?: boolean
 }
 | undefined
+
+export const UpdateAccountFormSchema = z.object({
+    name: z.string().min(2, { error: 'Le nom doit contenir au moins 2 caractères.' }).trim().optional(),
+    email: z.email({ error: 'Veuillez entrer un email valide.' }).trim().optional(),
+    currentPassword: z.string().trim().optional(),
+    newPassword: z
+        .string()
+        .min(8, { error: 'Doit contenir au moins 8 caractères.' })
+        .regex(/[a-zA-Z]/, { error: 'Doit contenir au moins une lettre.' })
+        .regex(/[0-9]/, { error: 'Doit contenir au moins un chiffre.' })
+        .regex(/[^a-zA-Z0-9]/, { error: 'Doit contenir au moins un caractère spécial.' })
+        .trim()
+        .optional()
+        .or(z.literal('')),
+}).refine((data) => !data.newPassword || !!data.currentPassword, {
+    error: 'Mot de passe actuel requis pour le modifier.',
+    path: ['currentPassword'],
+})
+
+export type AccountFormState =
+| {
+    errors?: {
+        name?: string[]
+        email?: string[]
+        currentPassword?: string[]
+        newPassword?: string[]
+    }
+    message?: string
+    success?: boolean
+}
+| undefined

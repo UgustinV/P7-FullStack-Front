@@ -1,11 +1,11 @@
 'use client'
 
-import { useActionState, useState, useEffect } from 'react'
+import { useActionState, useState, useEffect, useRef } from 'react'
 import { createProject } from '@/app/actions/projects'
 import { searchUsers } from '@/app/actions/users'
 import { FormField } from '@/components/FormField'
 import { ErrorMessage } from '@/components/ErrorMessage'
-import { Button } from '@/components/Button'
+import { Modal } from '@/components/Modal'
 import { User } from '@/app/lib/definitions'
 
 export function CreateProjectModal() {
@@ -13,7 +13,9 @@ export function CreateProjectModal() {
     const [contributors, setContributors] = useState<User[]>([])
     const [query, setQuery] = useState('')
     const [results, setResults] = useState<User[]>([])
+    const [dropdownOpen, setDropdownOpen] = useState(false)
     const [state, action, pending] = useActionState(createProject, undefined)
+    const dropdownRef = useRef<HTMLDivElement>(null)
 
     useEffect(() => {
         if (state?.success) {
@@ -21,6 +23,7 @@ export function CreateProjectModal() {
             setContributors([])
             setQuery('')
             setResults([])
+            setDropdownOpen(false)
         }
     }, [state])
 
@@ -31,15 +34,28 @@ export function CreateProjectModal() {
         }
         const timeout = setTimeout(async () => {
             const users = await searchUsers(query)
-            setResults(users.filter((user) => !contributors.some((c) => c.id === user.id)))
+            setResults(users)
         }, 300)
         return () => clearTimeout(timeout)
-    }, [query, contributors])
+    }, [query])
 
-    function addContributor(user: User) {
-        setContributors([...contributors, user])
-        setQuery('')
-        setResults([])
+    // close dropdown on outside click
+    useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setDropdownOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+
+    function toggleContributor(user: User, checked: boolean) {
+        if (checked) {
+            setContributors([...contributors, user])
+        } else {
+            setContributors(contributors.filter((c) => c.id !== user.id))
+        }
     }
 
     return (
@@ -50,39 +66,41 @@ export function CreateProjectModal() {
             >
                 Créer un projet
             </button>
-            {open && (
-                <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-                    <div className="bg-white rounded-[10px] p-8 w-120 relative flex flex-col gap-5">
-                        {state?.message && <ErrorMessage message={state.message} />}
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-lg font-semibold">Nouveau projet</h2>
-                            <button onClick={() => setOpen(false)} aria-label="Fermer" className="cursor-pointer">✕</button>
-                        </div>
-                        <form action={action} className="flex flex-col gap-4">
-                            <FormField
-                                label="Nom"
-                                id="name"
-                                type="text"
-                                name="name"
-                                placeholder="Mon projet"
-                                required
-                                error={state?.errors?.name}
-                            />
-                            <div className="flex flex-col w-full">
-                                <label htmlFor="description" className="mb-2">Description</label>
-                                <textarea
-                                    id="description"
-                                    name="description"
-                                    rows={3}
-                                    className="border border-(--form-grey) rounded px-3 py-3 mb-2"
-                                />
-                                {state?.errors?.description && (
-                                    <ErrorMessage message={state.errors.description.join(', ')} />
-                                )}
-                            </div>
-                            <div className="flex flex-col w-full">
-                                <label htmlFor="contributor" className="mb-2">Contributeurs</label>
-                                <div className="relative">
+            <Modal open={open} onClose={() => setOpen(false)} title="Créer un projet">
+                {state?.message && <ErrorMessage message={state.message} />}
+                <form action={action} className="flex flex-col gap-4">
+                    <FormField
+                        label="Titre*"
+                        id="name"
+                        type="text"
+                        name="name"
+                        placeholder=""
+                        required
+                        error={state?.errors?.name}
+                    />
+                    <FormField
+                        label="Description*"
+                        id="description"
+                        type="text"
+                        name="description"
+                        placeholder=""
+                        required
+                        error={state?.errors?.description}
+                    />
+                    <div className="flex flex-col w-full" ref={dropdownRef}>
+                        <label htmlFor="contributor" className="mb-2">Contributeurs</label>
+                        <div className="relative">
+                            <button
+                                type="button"
+                                onClick={() => setDropdownOpen((v) => !v)}
+                                className="w-full h-12.5 text-left text-xs text-(--neutral-grey) border border-(--form-grey) rounded px-3 py-3 cursor-pointer"
+                            >
+                                {contributors.length > 0
+                                    ? `${contributors.length} sélectionné(s)`
+                                    : 'Choisir un ou plusieurs contributeurs'}
+                            </button>
+                            {dropdownOpen && (
+                                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-(--form-grey) rounded z-10 p-2 flex flex-col gap-2">
                                     <input
                                         id="contributor"
                                         type="text"
@@ -90,48 +108,52 @@ export function CreateProjectModal() {
                                         onChange={(e) => setQuery(e.target.value)}
                                         placeholder="Nom ou email"
                                         autoComplete="off"
-                                        className="w-full border border-(--form-grey) rounded px-3 py-3"
+                                        className="w-full border border-(--form-grey) rounded px-3 py-2"
                                     />
-                                    {results.length > 0 && (
-                                        <ul className="absolute top-full left-0 right-0 mt-1 bg-white border border-(--form-grey) rounded z-10 max-h-40 overflow-auto">
-                                            {results.map((user) => (
+                                    <ul className="max-h-40 overflow-auto">
+                                        {results.map((user) => {
+                                            const checked = contributors.some((c) => c.id === user.id)
+                                            return (
                                                 <li key={user.id}>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => addContributor(user)}
-                                                        className="w-full text-left px-3 py-2 hover:bg-(--light-orange) cursor-pointer"
-                                                    >
+                                                    <label className="flex items-center gap-2 px-3 py-2 hover:bg-(--light-orange) cursor-pointer rounded">
+                                                        <input
+                                                            type="checkbox"
+                                                            checked={checked}
+                                                            onChange={(e) => toggleContributor(user, e.target.checked)}
+                                                        />
                                                         {user.name} <span className="text-(--neutral-grey)">({user.email})</span>
-                                                    </button>
+                                                    </label>
                                                 </li>
-                                            ))}
-                                        </ul>
-                                    )}
+                                            )
+                                        })}
+                                    </ul>
                                 </div>
-                                <div className="flex flex-wrap gap-2 mt-2 mb-2">
-                                    {contributors.map((user) => (
-                                        <span key={user.id} className="flex items-center gap-2 text-xs bg-(--light-orange) rounded-full px-3 py-1">
-                                            {user.name}
-                                            <button
-                                                type="button"
-                                                onClick={() => setContributors(contributors.filter((c) => c.id !== user.id))}
-                                                className="cursor-pointer"
-                                            >
-                                                ✕
-                                            </button>
-                                            <input type="hidden" name="contributors" value={user.email} />
-                                        </span>
-                                    ))}
-                                </div>
-                                {state?.errors?.contributors && (
-                                    <ErrorMessage message={state.errors.contributors.join(', ')} />
-                                )}
-                            </div>
-                            <Button style="w-full py-3" content={pending ? 'Création...' : 'Créer le projet'} />
-                        </form>
+                            )}
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                            {contributors.map((user) => (
+                                <span key={user.id} className="flex items-center gap-2 text-xs bg-(--light-orange) rounded-full px-3 py-1">
+                                    {user.name}
+                                    <button
+                                        type="button"
+                                        onClick={() => setContributors(contributors.filter((c) => c.id !== user.id))}
+                                        className="cursor-pointer"
+                                    >
+                                        ✕
+                                    </button>
+                                    <input type="hidden" name="contributors" value={user.email} />
+                                </span>
+                            ))}
+                        </div>
+                        {state?.errors?.contributors && (
+                            <ErrorMessage message={state.errors.contributors.join(', ')} />
+                        )}
                     </div>
-                </div>
-            )}
+                    <button className={`text-white bg-(--button-grey) rounded-[10px] w-fit px-4.5 py-3.75 cursor-pointer ${pending ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={pending}>
+                        {pending ? 'Ajout en cours...' : 'Ajouter un projet'}
+                    </button>
+                </form>
+            </Modal>
         </>
     )
 }
