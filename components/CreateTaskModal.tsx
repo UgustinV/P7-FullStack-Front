@@ -74,22 +74,20 @@ export function CreateTaskModal({ projectId, members }: { projectId: string; mem
                                         .join(', ')
                                     : 'Sélectionner des membres'}
                             </button>
-                            {assigneesOpen && (
-                                <div className="absolute z-10 mt-1 w-full max-h-48 overflow-auto border border-(--form-grey) rounded bg-white">
-                                    {members.map((member) => (
-                                        <label key={member.id} className="flex items-center gap-2 text-sm px-3 py-2 cursor-pointer hover:bg-(--form-grey)">
-                                            <input
-                                                type="checkbox"
-                                                name="assigneeIds"
-                                                value={member.user.id}
-                                                checked={selectedAssignees.includes(member.user.id)}
-                                                onChange={() => toggleAssignee(member.user.id)}
-                                            />
-                                            {member.user.name}
-                                        </label>
-                                    ))}
-                                </div>
-                            )}
+                            <div className={`absolute z-10 mt-1 w-full max-h-48 overflow-auto border border-(--form-grey) rounded bg-white ${assigneesOpen ? 'block' : 'hidden'}`}>
+                                {members.map((member) => (
+                                    <label key={member.id} className="flex items-center gap-2 text-sm px-3 py-2 cursor-pointer hover:bg-(--form-grey)">
+                                        <input
+                                            type="checkbox"
+                                            name="assigneeIds"
+                                            value={member.user.id}
+                                            checked={selectedAssignees.includes(member.user.id)}
+                                            onChange={() => toggleAssignee(member.user.id)}
+                                        />
+                                        {member.user.name}
+                                    </label>
+                                ))}
+                            </div>
                         </div>
                     </div>
                     <div className="gap-4 flex flex-col mb-8">

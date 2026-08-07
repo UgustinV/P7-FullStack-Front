@@ -23,7 +23,7 @@ export function TaskEditView({
     const [view, setView] = useState<View>('list')
 
     return (
-        <div className="flex flex-col w-full gap-7.5 mb-12">
+        <div className="flex flex-col w-full gap-7.5 mb-12 bg-white rounded-[10px] p-6 border border-(--form-grey)">
             <div className="flex flex-row justify-between items-center">
                 <div className="flex flex-col justify-center items-start">
                     <h2 className="text-lg font-semibold">Tâches</h2>
@@ -44,6 +44,9 @@ export function TaskEditView({
                         <Image src="/calendar-icon.svg" alt="Calendrier" width={16} height={16} className="w-4 h-4" />
                         <span>Calendrier</span>
                     </button>
+                    <div>
+                        Statut
+                    </div>
                     <div className="flex flex-row gap-4">
                     <div className="relative w-full">
                         <input

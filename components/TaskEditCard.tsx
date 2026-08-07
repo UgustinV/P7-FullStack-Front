@@ -1,11 +1,13 @@
 'use client'
 
-import { useActionState, useState, useEffect } from 'react'
+import { useActionState, useState, useEffect, useRef } from 'react'
 import Image from 'next/image'
 import { updateTask, deleteTask, createComment, updateComment, deleteComment } from '@/app/actions/tasks'
 import { ErrorMessage } from '@/components/ErrorMessage'
-import { Button } from '@/components/Button'
+import { Modal } from '@/components/Modal'
 import { Task, TaskComment, ProjectMember, STATUS_LABELS, TaskPriority } from '@/app/lib/definitions'
+import { getInitials } from '@/app/lib/utils'
+import { FormField } from '@/components/FormField'
 
 const PRIORITY_LABELS: Record<TaskPriority, string> = {
     LOW: 'Basse',
@@ -25,181 +27,239 @@ export function TaskEditCard({
     task,
     members = [],
     currentUserId,
-    projects = {},
 }: {
     task: Task
     members?: ProjectMember[]
     currentUserId?: string
-    projects?: Record<string, string>
 }) {
-    const [open, setOpen] = useState(false)
-    const dueDate = new Date(task.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
-    return (
-        <div className="flex flex-row justify-between gap-4.5 px-10 py-6.25 border border-(--form-grey) rounded-lg bg-white">
-            <div>
-                <h4 className="font-semibold text-lg mb-2">{task.title}</h4>
-                <p className="text-sm mb-8">{task.description}</p>
-                <div className="flex items-center gap-3.75 text-xs text-(--neutral-grey)">
-                    <div className="flex items-center gap-2">
-                        <Image src="/folder-icon.svg" alt="project icon" width={16} height={16} className="w-4 h-4" />
-                        <span>{projects[task.projectId] ?? task.projectId}</span>
-                    </div>
-                    <div className='border-r border-[#9CA3AF] h-2.75'></div>
-                    <div className="flex items-center gap-2">
-                        <Image src="/grey-calendar-icon.svg" alt="calendar icon" width={16} height={16} className="w-4 h-4" />
-                        <span>{dueDate}</span>
-                    </div>
-                    <div className='border-r border-[#9CA3AF] h-2.75'></div>
-                    <div className="flex items-center gap-2">
-                        <Image src="/comment-icon.svg" alt="comment icon" width={16} height={16} className="w-4 h-4" />
-                        <span>{task.comments.length}</span>
-                    </div>
-                </div>
-            </div>
-            <div className="flex flex-col items-end justify-between gap-2">
-                <span className={`text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
-                    {STATUS_LABELS[task.status]}
-                </span>
-                <button
-                    onClick={() => setOpen(true)}
-                    className="px-12 py-3.75 rounded-[10px] bg-foreground text-[16px] text-white cursor-pointer"
-                >
-                    Voir
-                </button>
-            </div>
-            {open && (
-                <TaskDetailModal
-                    task={task}
-                    members={members}
-                    currentUserId={currentUserId}
-                    onClose={() => setOpen(false)}
-                />
-            )}
-        </div>
-    )
-}
-
-function TaskDetailModal({
-    task,
-    members,
-    currentUserId,
-    onClose,
-}: {
-    task: Task
-    members: ProjectMember[]
-    currentUserId?: string
-    onClose: () => void
-}) {
-    const updateTaskWithIds = updateTask.bind(null, task.projectId, task.id)
-    const [state, action, pending] = useActionState(updateTaskWithIds, undefined)
+    const [commentsOpen, setCommentsOpen] = useState(false)
+    const [menuOpen, setMenuOpen] = useState(false)
     const [editing, setEditing] = useState(false)
+    const menuRef = useRef<HTMLDivElement>(null)
+    const dueDate = new Date(task.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
 
     useEffect(() => {
-        if (state?.success) setEditing(false)
-    }, [state])
+        function handleClickOutside(e: MouseEvent) {
+            if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+                setMenuOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
-            <div className="bg-white rounded-[10px] p-8 w-140 max-h-[85vh] overflow-auto flex flex-col gap-5">
-                {state?.message && <ErrorMessage message={state.message} />}
-                <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold">{task.title}</h2>
-                    <button onClick={onClose} aria-label="Fermer" className="cursor-pointer">✕</button>
-                </div>
-
-                {editing ? (
-                    <form action={action} className="flex flex-col gap-4">
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="title" className="mb-2">Titre</label>
-                            <input id="title" name="title" defaultValue={task.title} className="border border-(--form-grey) rounded px-3 py-3" />
-                        </div>
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="description" className="mb-2">Description</label>
-                            <textarea id="description" name="description" rows={3} defaultValue={task.description} className="border border-(--form-grey) rounded px-3 py-3" />
-                        </div>
-                        <div className="flex gap-4">
-                            <div className="flex flex-col flex-1">
-                                <label htmlFor="status" className="mb-2">Statut</label>
-                                <select id="status" name="status" defaultValue={task.status} className="border border-(--form-grey) rounded px-3 py-3">
-                                    {Object.entries(STATUS_LABELS).map(([value, label]) => (
-                                        <option key={value} value={value}>{label}</option>
-                                    ))}
-                                </select>
+        <div className="flex flex-col gap-4.5 px-10 py-6.25 border border-(--form-grey) rounded-lg bg-white">
+            <div className="flex flex-row justify-between gap-4.5">
+                <div className="flex flex-col gap-4.5 w-full">
+                    <div className="flex flex-row w-full justify-between items-center mb-6">
+                        <div>
+                            <div className="flex items-center justify-start gap-2 mb-2">
+                                <h4 className="font-semibold text-lg">{task.title}</h4>
+                                <span className={`h-fit text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
+                                    {STATUS_LABELS[task.status]}
+                                </span>
                             </div>
-                            <div className="flex flex-col flex-1">
-                                <label htmlFor="priority" className="mb-2">Priorité</label>
-                                <select id="priority" name="priority" defaultValue={task.priority} className="border border-(--form-grey) rounded px-3 py-3">
-                                    {Object.entries(PRIORITY_LABELS).map(([value, label]) => (
-                                        <option key={value} value={value}>{label}</option>
-                                    ))}
-                                </select>
+                            <p className="text-sm">{task.description}</p>
+                        </div>
+                        <div className="flex items-center justify-between border border-(--form-grey) rounded-lg gap-2">
+                            <div className="relative" ref={menuRef}>
+                                <button
+                                    onClick={() => setMenuOpen((v) => !v)}
+                                    aria-label="Options"
+                                    className="px-4 py-3 text-(--neutral-grey) cursor-pointer"
+                                >
+                                    •••
+                                </button>
+                                {menuOpen && (
+                                    <div className="absolute right-0 bottom-full mb-1 bg-white border border-(--form-grey) rounded z-10 flex flex-col text-sm w-32">
+                                        <button
+                                            onClick={() => { setEditing(true); setMenuOpen(false) }}
+                                            className="px-4 py-2 text-left text-(--dark-orange) hover:bg-(--light-orange) cursor-pointer"
+                                        >
+                                            Modifier
+                                        </button>
+                                        <DeleteTaskButton projectId={task.projectId} taskId={task.id} />
+                                    </div>
+                                )}
                             </div>
                         </div>
-                        <div className="flex flex-col w-full">
-                            <label htmlFor="dueDate" className="mb-2">Échéance</label>
-                            <input id="dueDate" name="dueDate" type="date" defaultValue={task.dueDate.slice(0, 10)} className="border border-(--form-grey) rounded px-3 py-3" />
+                    </div>
+                    <div className="flex flex-col gap-6.25 text-xs text-(--neutral-grey)">
+                        <div className="flex items-center gap-1">
+                            <span>Échéance :</span>
+                            <Image src="/black-calendar-icon.svg" alt="calendar icon" width={16} height={16} className="w-4 h-4" />
+                            <span className='text-black'>{dueDate}</span>
                         </div>
-                        <div className="flex flex-col w-full">
-                            <label className="mb-2">Assignés</label>
-                            <div className="flex flex-wrap gap-3">
-                                {members.map((member) => (
-                                    <label key={member.id} className="flex items-center gap-2 text-sm">
-                                        <input
-                                            type="checkbox"
-                                            name="assigneeIds"
-                                            value={member.user.id}
-                                            defaultChecked={task.assignees.some((a) => a.user.id === member.user.id)}
-                                        />
-                                        {member.user.name}
-                                    </label>
+                        <div>
+                            <span>Assignée à :</span>
+                            <div className="flex gap-2">
+                                {task.assignees.map((a) => (
+                                    <div key={a.user.id} className="flex items-center gap-1">
+                                        <span
+                                            key={a.user.id}
+                                            title={a.user.name}
+                                            className="flex items-center justify-center w-6.25 h-6.25 rounded-full bg-(--form-grey) text-[10px] text-black"
+                                        >
+                                            {getInitials(a.user.name)}
+                                        </span>
+                                        <span className="flex items-center h-6.25 rounded-full bg-(--form-grey) px-2">{a.user.name}</span>
+                                    </div>
                                 ))}
                             </div>
                         </div>
-                        <div className="flex gap-4">
-                            <Button style="w-full py-3" content={pending ? 'Enregistrement...' : 'Enregistrer'} />
-                            <button type="button" onClick={() => setEditing(false)} className="w-full cursor-pointer">Annuler</button>
-                        </div>
-                    </form>
-                ) : (
-                    <>
-                        <p>{task.description}</p>
-                        <div className="flex gap-6 text-sm text-(--neutral-grey)">
-                            <span>Statut : {STATUS_LABELS[task.status]}</span>
-                            <span>Priorité : {PRIORITY_LABELS[task.priority]}</span>
-                            <span>Échéance : {new Date(task.dueDate).toLocaleDateString('fr-FR')}</span>
-                        </div>
-                        <div className="text-sm text-(--neutral-grey)">
-                            Assignés : {task.assignees.map((a) => a.user.name).join(', ') || 'Aucun'}
-                        </div>
-                            <div className="flex gap-4">
-                                <button onClick={() => setEditing(true)} className="text-sm text-(--dark-orange) underline cursor-pointer">
-                                    Modifier
-                                </button>
-                                <DeleteTaskButton projectId={task.projectId} taskId={task.id} onDeleted={onClose} />
-                            </div>
-                    </>
-                )}
+                    </div>
+                    <button
+                        onClick={() => setCommentsOpen((v) => !v)}
+                        className="flex items-center gap-2 text-xs text-(--neutral-grey) cursor-pointer pt-6 border-t border-(--form-grey)"
+                    >
+                        <span>Commentaire{task.comments.length > 1 ? 's' : ''} ({task.comments.length})</span>
+                    </button>
+                </div>
+            </div>
 
+            {commentsOpen && (
                 <CommentsSection
                     projectId={task.projectId}
                     taskId={task.id}
                     comments={task.comments}
                     currentUserId={currentUserId}
                 />
-            </div>
+            )}
+
+            {editing && (
+                <TaskEditModal task={task} members={members} onClose={() => setEditing(false)} />
+            )}
         </div>
     )
 }
 
-function DeleteTaskButton({ projectId, taskId, onDeleted }: { projectId: string; taskId: string; onDeleted: () => void }) {
+function TaskEditModal({
+    task,
+    members,
+    onClose,
+}: {
+    task: Task
+    members: ProjectMember[]
+    onClose: () => void
+}) {
+    const updateTaskWithIds = updateTask.bind(null, task.projectId, task.id)
+    const [state, action, pending] = useActionState(updateTaskWithIds, undefined)
+    const [assigneesOpen, setAssigneesOpen] = useState(false)
+    const [selectedAssignees, setSelectedAssignees] = useState<string[]>(
+        task.assignees.map((a) => a.user.id)
+    )
+    const assigneesRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        function handleClickOutside(e: MouseEvent) {
+            if (assigneesRef.current && !assigneesRef.current.contains(e.target as Node)) {
+                setAssigneesOpen(false)
+            }
+        }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
+
+    function toggleAssignee(id: string) {
+        setSelectedAssignees((prev) =>
+            prev.includes(id) ? prev.filter((a) => a !== id) : [...prev, id]
+        )
+    }
+
+    useEffect(() => {
+        if (state?.success) onClose()
+    }, [state, onClose])
+
+    return (
+        <Modal open onClose={onClose} title="Modifier la tâche">
+            {state?.message && <ErrorMessage message={state.message} />}
+            <form action={action} className="flex flex-col gap-6">
+                <FormField label="Titre*" id="title" type="text" name="title" defaultValue={task.title} required error={state?.errors?.title} />
+                <FormField label="Description*" id="description" type="text" name="description" defaultValue={task.description} required error={state?.errors?.description} />
+                <div className="flex flex-col flex-1">
+                    <label htmlFor="dueDate" className="mb-2">Échéance</label>
+                    <input id="dueDate" name="dueDate" type="date" defaultValue={task.dueDate.slice(0, 10)} className="border border-(--form-grey) rounded px-3 py-3 cursor-pointer" />
+                </div>
+                <div className="flex flex-col flex-1">
+                    <label htmlFor="priority" className="mb-2">Priorité</label>
+                    <select id="priority" name="priority" defaultValue={task.priority} className="border border-(--form-grey) rounded px-3 py-3.75 cursor-pointer">
+                        <option value="LOW">Basse</option>
+                        <option value="MEDIUM">Moyenne</option>
+                        <option value="HIGH">Haute</option>
+                        <option value="URGENT">Urgente</option>
+                    </select>
+                </div>
+                <div className="flex flex-col w-full" ref={assigneesRef}>
+                    <label className="mb-2">Assigné à :</label>
+                    <div className="relative">
+                        <button
+                            type="button"
+                            onClick={() => setAssigneesOpen((o) => !o)}
+                            className="w-full text-left border border-(--form-grey) rounded px-3 py-3 cursor-pointer"
+                        >
+                            {selectedAssignees.length > 0
+                                ? members
+                                    .filter((m) => selectedAssignees.includes(m.user.id))
+                                    .map((m) => m.user.name)
+                                    .join(', ')
+                                : 'Sélectionner des membres'}
+                        </button>
+                        <div className={`absolute z-10 mt-1 w-full max-h-48 overflow-auto border border-(--form-grey) rounded bg-white ${assigneesOpen ? 'block' : 'hidden'}`}>
+                            {members.map((member) => (
+                                <label key={member.id} className="flex items-center gap-2 text-sm px-3 py-2 cursor-pointer hover:bg-(--form-grey)">
+                                    <input
+                                        type="checkbox"
+                                        name="assigneeIds"
+                                        value={member.user.id}
+                                        checked={selectedAssignees.includes(member.user.id)}
+                                        onChange={() => toggleAssignee(member.user.id)}
+                                    />
+                                    {member.user.name}
+                                </label>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+                <div className="gap-4 flex flex-col mb-8">
+                    <label>Statut :</label>
+                    <div className="flex flex-row gap-2">
+                        <label htmlFor="todo" className="cursor-pointer">
+                            <input id='todo' className='hidden peer' type="radio" name="status" value="TODO" defaultChecked={task.status === 'TODO'} />
+                            <span className="flex items-center gap-2 text-sm text-(--error-red) bg-(--error-red-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--error-red)">
+                                À faire
+                            </span>
+                        </label>
+                        <label htmlFor="in-progress" className="cursor-pointer">
+                            <input id='in-progress' className='hidden peer' type="radio" name="status" value="IN_PROGRESS" defaultChecked={task.status === 'IN_PROGRESS'} />
+                            <span className="flex items-center gap-2 text-sm text-(--warning-orange) bg-(--warning-orange-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--warning-orange)">
+                                En cours
+                            </span>
+                        </label>
+                        <label htmlFor="done" className="cursor-pointer">
+                            <input id='done' className='hidden peer' type="radio" name="status" value="DONE" defaultChecked={task.status === 'DONE'} />
+                            <span className="flex items-center gap-2 text-sm text-(--success-green) bg-(--success-green-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--success-green)">
+                                Terminée
+                            </span>
+                        </label>
+                    </div>
+                </div>
+                <button className={`text-white bg-(--button-grey) rounded-[10px] w-fit px-4.5 py-3.75 cursor-pointer ${pending ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={pending}>
+                    {pending ? 'Enregistrement...' : 'Enregistrer'}
+                </button>
+            </form>
+        </Modal>
+    )
+}
+
+function DeleteTaskButton({ projectId, taskId }: { projectId: string; taskId: string }) {
     async function handleDelete() {
         if (!confirm('Supprimer définitivement cette tâche ?')) return
         await deleteTask(projectId, taskId)
-        onDeleted()
     }
 
     return (
-        <button onClick={handleDelete} className="text-sm text-(--error-red) underline cursor-pointer">
+        <button onClick={handleDelete} className="px-4 py-2 text-left text-(--error-red) hover:bg-(--light-orange) cursor-pointer">
             Supprimer
         </button>
     )
@@ -221,7 +281,6 @@ function CommentsSection({
 
     return (
         <div className="flex flex-col gap-3 border-t border-(--form-grey) pt-4">
-            <h3 className="font-semibold">Commentaires</h3>
             <ul className="flex flex-col gap-3">
                 {comments.map((comment) => (
                     <CommentItem
@@ -303,7 +362,7 @@ function CommentItem({
                     </button>
                 </form>
             ) : (
-                <p>{comment.content}</p>
+                <p className='text-xs text-(--neutral-grey)'>{comment.content}</p>
             )}
         </li>
     )

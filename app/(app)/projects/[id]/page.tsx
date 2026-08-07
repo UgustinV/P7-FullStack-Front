@@ -4,10 +4,10 @@ import Image from 'next/image'
 import { TaskEditView } from '@/components/TaskEditView'
 import { EditProjectModal } from '@/components/EditProjectModal'
 import { DeleteProjectButton } from '@/components/DeleteProjectButton'
-import { ContributorsManager } from '@/components/ContributorsManager'
 import { CreateTaskModal } from '@/components/CreateTaskModal'
-import { canEditProject, canDeleteProject, canManageContributors, getAssignableMembers, getUserRole } from '@/app/lib/permissions'
+import { canEditProject, canDeleteProject, getAssignableMembers, getUserRole } from '@/app/lib/permissions'
 import Link from 'next/dist/client/link'
+import { getInitials } from '@/app/lib/utils'
 
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
@@ -23,7 +23,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
     return (
         <div className="mx-25">
-            <div className="flex flex-col gap-3.5 mb-4 mt-23">
+            <div className="flex flex-col gap-3.5 mb-8.5 mt-23">
                 <div className="flex items-center justify-between mb-12.5">
                     <div className="relative">
                         <Link className="-translate-x-[calc(100%+16px)] top-0 absolute flex items-center px-4 py-5.5 mr-4 rounded-[10px] bg-white border border-(--form-grey)" href="/projects">
@@ -40,21 +40,36 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                     </div>
                     <CreateTaskModal projectId={project.id} members={assignableMembers} />
                 </div>
-                <div className="flex items-center gap-4 text-sm text-(--neutral-grey)">
-                    <span>Propriétaire : {project.owner.name}</span>
-                    <div className="flex -space-x-2">
-                        {project.members.map((member) => (
+                <div className="flex items-center justify-between gap-4 text-sm text-(--neutral-grey) bg-[#F3F4F6] rounded-[10px] px-6 py-4">
+                    <div className="flex flex-row items-center gap-2">
+                        <span className='text-black text-lg font-semibold'>Contributeurs</span>
+                        <span>{project.members.length + 1} personnes</span>
+                    </div>
+                    <div className="flex gap-2">
+                        <div className="flex items-center gap-1">
                             <span
-                                key={member.id}
-                                title={member.user.name}
-                                className="flex items-center justify-center w-8 h-8 rounded-full bg-(--light-orange) border-2 border-white text-[10px]"
+                                key={project.owner.id}
+                                title={project.owner.name}
+                                className="flex items-center justify-center w-6.25 h-6.25 rounded-full bg-(--light-orange) text-[10px] text-black"
                             >
-                                {member.user.name.slice(0, 2).toUpperCase()}
+                                {getInitials(project.owner.name)}
                             </span>
+                            <span className='flex items-center h-6.25 rounded-full bg-(--light-orange) text-(--dark-orange) px-2'>Propriétaire</span>
+                        </div>
+                        {project.members.map((member) => (
+                            <div key={member.user.id} className="flex items-center gap-1">
+                                <span
+                                    key={member.user.id}
+                                    title={member.user.name}
+                                    className="flex items-center justify-center w-6.25 h-6.25 rounded-full bg-(--form-grey) text-[10px] text-black"
+                                >
+                                    {getInitials(member.user.name)}
+                                </span>
+                                <span className="flex items-center h-6.25 rounded-full bg-(--form-grey) px-2">{member.user.name}</span>
+                            </div>
                         ))}
                     </div>
                 </div>
-                {canManageContributors(userRole) && <ContributorsManager project={project} />}
             </div>
             <TaskEditView
                 tasks={tasks}
