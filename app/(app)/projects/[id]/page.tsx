@@ -6,7 +6,7 @@ import { EditProjectModal } from '@/components/EditProjectModal'
 import { DeleteProjectButton } from '@/components/DeleteProjectButton'
 import { ContributorsManager } from '@/components/ContributorsManager'
 import { CreateTaskModal } from '@/components/CreateTaskModal'
-import { canEditProject, canDeleteProject, canManageContributors, canManageTasks, getAssignableMembers, getUserRole } from '@/app/lib/permissions'
+import { canEditProject, canDeleteProject, canManageContributors, getAssignableMembers, getUserRole } from '@/app/lib/permissions'
 import Link from 'next/dist/client/link'
 
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
@@ -19,7 +19,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
 
     const tasks = await getProjectTasks(id)
     const userRole = getUserRole(project, user?.user.id)
-    const canEditTasks = canManageTasks(userRole)
     const assignableMembers = getAssignableMembers(project)
 
     return (
@@ -39,7 +38,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                         </div>
                         <p className="text-(--neutral-grey) mt-3.5">{project.description}</p>
                     </div>
-                    {canEditTasks && <CreateTaskModal projectId={project.id} members={assignableMembers} />}
+                    <CreateTaskModal projectId={project.id} members={assignableMembers} />
                 </div>
                 <div className="flex items-center gap-4 text-sm text-(--neutral-grey)">
                     <span>Propriétaire : {project.owner.name}</span>
@@ -60,7 +59,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
             <TaskEditView
                 tasks={tasks}
                 members={assignableMembers}
-                canManageTasks={canEditTasks}
                 currentUserId={user?.user.id}
             />
         </div>

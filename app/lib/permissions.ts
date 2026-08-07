@@ -14,11 +14,6 @@ export function canManageContributors(role?: Role) {
     return role === 'OWNER' || role === 'ADMIN'
 }
 
-export function canManageTasks(role?: Role) {
-    return role === 'OWNER' || role === 'ADMIN' || role === 'CONTRIBUTOR'
-}
-
-
 export function getAssignableMembers(project: Project): ProjectMember[] {
     const hasOwnerMember = project.members.some((member) => member.user.id === project.owner.id)
     if (hasOwnerMember) return project.members

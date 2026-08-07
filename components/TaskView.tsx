@@ -11,13 +11,11 @@ type View = 'kanban' | 'list'
 export function TaskView({
     tasks,
     members = [],
-    canManageTasks = false,
     currentUserId,
     projects = {},
 }: {
     tasks: Task[]
     members?: ProjectMember[]
-    canManageTasks?: boolean
     currentUserId?: string
     projects?: Record<string, string>
 }) {
@@ -42,8 +40,8 @@ export function TaskView({
                 </button>
             </div>
             {view === 'kanban'
-                ? <Kanban tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />
-                : <List tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />}
+                ? <Kanban tasks={tasks} members={members} currentUserId={currentUserId} projects={projects} />
+                : <List tasks={tasks} members={members} currentUserId={currentUserId} projects={projects} />}
         </div>
     )
 }

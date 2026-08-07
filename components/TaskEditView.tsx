@@ -11,15 +11,14 @@ type View = 'calendar' | 'list'
 export function TaskEditView({
     tasks,
     members = [],
-    canManageTasks = false,
     currentUserId,
     projects = {},
 }: {
     tasks: Task[]
     members?: ProjectMember[]
-    canManageTasks?: boolean
     currentUserId?: string
     projects?: Record<string, string>
+    isEditView?: boolean
 }) {
     const [view, setView] = useState<View>('list')
 
@@ -64,8 +63,8 @@ export function TaskEditView({
                 </div>
             </div>
             {view === 'calendar'
-                ? <Calendar tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />
-                : <List tasks={tasks} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />}
+                ? <Calendar tasks={tasks} members={members} currentUserId={currentUserId} projects={projects} />
+                : <List isEditView={true} tasks={tasks} members={members} currentUserId={currentUserId} projects={projects} />}
         </div>
     )
 }

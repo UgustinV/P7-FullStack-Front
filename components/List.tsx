@@ -1,19 +1,20 @@
 import { TaskCard } from '@/components/TaskCard'
+import { TaskEditCard } from '@/components/TaskEditCard'
 import { Task, ProjectMember } from '@/app/lib/definitions'
 import Image from 'next/image'
 
 export function List({
     tasks,
     members,
-    canManageTasks,
     currentUserId,
     projects = {},
+    isEditView = false,
 }: {
     tasks: Task[]
     members: ProjectMember[]
-    canManageTasks: boolean
     currentUserId?: string
     projects?: Record<string, string>
+    isEditView?: boolean
 }) {
     return (
         <div className="flex flex-col w-full gap-4 bg-white rounded-lg px-15 py-10 border border-(--form-grey)">
@@ -40,7 +41,11 @@ export function List({
                 </div>
             </div>
             {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />
+                isEditView ? (
+                    <TaskEditCard key={task.id} task={task} members={members} currentUserId={currentUserId} projects={projects} />
+                ) : (
+                    <TaskCard key={task.id} task={task} members={members} currentUserId={currentUserId} projects={projects} />
+                )
             ))}
         </div>
     )

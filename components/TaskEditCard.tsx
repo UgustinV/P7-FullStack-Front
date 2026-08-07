@@ -21,7 +21,7 @@ const STATUS_STYLES: Record<Task['status'], string> = {
     CANCELLED: 'bg-(--success-green-light) text-(--success-green)',
 }
 
-export function TaskCard({
+export function TaskEditCard({
     task,
     members = [],
     currentUserId,

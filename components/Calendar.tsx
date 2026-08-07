@@ -5,13 +5,11 @@ import Image from 'next/image'
 export function Calendar({
     tasks,
     members,
-    canManageTasks,
     currentUserId,
     projects = {},
 }: {
     tasks: Task[]
     members: ProjectMember[]
-    canManageTasks: boolean
     currentUserId?: string
     projects?: Record<string, string>
 }) {
@@ -40,7 +38,7 @@ export function Calendar({
                 </div>
             </div>
             {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />
+                <TaskCard key={task.id} task={task} members={members} currentUserId={currentUserId} projects={projects} />
             ))}
         </div>
     )

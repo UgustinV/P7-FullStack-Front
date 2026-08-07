@@ -5,14 +5,12 @@ export function KanbanColumn({
     title,
     tasks,
     members,
-    canManageTasks,
     currentUserId,
     projects = {},
 }: {
     title: string
     tasks: Task[]
     members: ProjectMember[]
-    canManageTasks: boolean
     currentUserId?: string
     projects?: Record<string, string>
 }) {
@@ -23,7 +21,7 @@ export function KanbanColumn({
                 <span className="text-sm text-(--neutral-grey) bg-(--form-grey) px-4 py-1 rounded-full">{tasks.length}</span>
             </div>
             {tasks.map((task) => (
-                <TaskCard key={task.id} task={task} members={members} canManageTasks={canManageTasks} currentUserId={currentUserId} projects={projects} />
+                <TaskCard key={task.id} task={task} members={members} currentUserId={currentUserId} projects={projects} />
             ))}
         </section>
     )

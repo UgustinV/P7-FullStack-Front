@@ -6,13 +6,11 @@ const BOARD_COLUMNS: Exclude<TaskStatus, 'CANCELLED'>[] = ['TODO', 'IN_PROGRESS'
 export function Kanban({
     tasks,
     members,
-    canManageTasks,
     currentUserId,
     projects = {},
 }: {
     tasks: Task[]
     members: ProjectMember[]
-    canManageTasks: boolean
     currentUserId?: string
     projects?: Record<string, string>
 }) {
@@ -24,7 +22,6 @@ export function Kanban({
                     title={STATUS_LABELS[status]}
                     tasks={tasks.filter((task) => task.status === status)}
                     members={members}
-                    canManageTasks={canManageTasks}
                     currentUserId={currentUserId}
                     projects={projects}
                 />
