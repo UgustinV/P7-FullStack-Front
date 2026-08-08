@@ -90,7 +90,7 @@ function TaskDetailModal({
 }) {
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50" onClick={onClose}>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
             <div className="bg-white rounded-[10px] p-8 w-140 max-h-[85vh] overflow-auto flex flex-col gap-5">
                 <div className="flex items-center justify-between">
                     <h2 className="text-lg font-semibold">{task.title}</h2>
