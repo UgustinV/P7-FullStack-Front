@@ -35,10 +35,17 @@ export function TaskCard({
     const dueDate = new Date(task.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
     return (
         <div className="flex flex-row justify-between gap-4.5 px-10 py-6.25 border border-(--form-grey) rounded-lg bg-white">
-            <div>
-                <h4 className="font-semibold text-lg mb-2">{task.title}</h4>
-                <p className="text-sm mb-8">{task.description}</p>
-                <div className="flex items-center gap-3.75 text-xs text-(--neutral-grey)">
+            <div className="w-full">
+                <div className="flex flex-col justify-start items-start mb-8">
+                    <div className="flex flex-row w-full justify-between items-center mb-2">
+                        <h4 className="font-semibold text-lg">{task.title}</h4>
+                        <span className={`text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
+                            {STATUS_LABELS[task.status]}
+                        </span>
+                    </div>
+                    <p className="text-sm text-(--neutral-grey)">{task.description}</p>
+                </div>
+                <div className="flex items-center gap-3.75 text-xs text-(--neutral-grey) mb-8">
                     <div className="flex items-center gap-2">
                         <Image src="/folder-icon.svg" alt="project icon" width={16} height={16} className="w-4 h-4" />
                         <span>{projects[task.projectId] ?? task.projectId}</span>
@@ -54,11 +61,6 @@ export function TaskCard({
                         <span>{task.comments.length}</span>
                     </div>
                 </div>
-            </div>
-            <div className="flex flex-col items-end justify-between gap-2">
-                <span className={`text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
-                    {STATUS_LABELS[task.status]}
-                </span>
                 <button
                     onClick={() => setOpen(true)}
                     className="px-12 py-3.75 rounded-[10px] bg-foreground text-[16px] text-white cursor-pointer"

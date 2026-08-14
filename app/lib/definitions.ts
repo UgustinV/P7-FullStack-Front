@@ -34,7 +34,7 @@ export type SessionPayload = {
 }
 
 export type TaskStatus = 'TODO' | 'IN_PROGRESS' | 'DONE' | 'CANCELLED'
-export type TaskPriority = 'LOW' | 'MEDIUM' | 'HIGH' | 'URGENT'
+export type TaskPriority = 'URGENT' | 'HIGH' | 'MEDIUM'| 'LOW' 
 
 export type User = {
     id: string
