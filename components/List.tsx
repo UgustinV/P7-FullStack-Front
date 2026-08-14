@@ -16,6 +16,7 @@ export function List({
     projects?: Record<string, string>
     isEditView?: boolean
 }) {
+    tasks.sort((a, b) => ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(a.priority) - ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(b.priority))
     return (
         <div className={`flex flex-col w-full gap-4 ${isEditView ? '' : 'bg-white lg:rounded-lg lg:px-15 lg:py-10 border-t lg:border border-(--form-grey)'}`}>
             {!isEditView && (

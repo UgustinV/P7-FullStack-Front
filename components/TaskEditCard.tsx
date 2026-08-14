@@ -42,18 +42,18 @@ export function TaskEditCard({
     }, [])
 
     return (
-        <div className="flex flex-col gap-4.5 px-10 py-6.25 border border-(--form-grey) rounded-lg bg-white">
+        <div className="flex flex-col px-5 pt-3 lg:px-10 lg:py-6.25 border-y lg:border border-(--form-grey) lg:rounded-lg bg-white">
             <div className="flex flex-row justify-between gap-4.5">
                 <div className="flex flex-col gap-4.5 w-full">
-                    <div className="flex flex-row w-full justify-between items-center mb-6">
+                    <div className="flex flex-row w-full justify-between items-center mb-3 lg:mb-6">
                         <div>
-                            <div className="flex items-center justify-start gap-2 mb-2">
-                                <h4 className="font-semibold text-lg">{task.title}</h4>
+                            <div className="flex flex-col items-start justify-center lg:flex-row lg:justify-start lg:items-center gap-2 mb-2">
+                                <h4 className="font-semibold text-sm lg:text-lg">{task.title}</h4>
                                 <span className={`h-fit text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
                                     {STATUS_LABELS[task.status]}
                                 </span>
                             </div>
-                            <p className="text-sm">{task.description}</p>
+                            <p className="text-xs lg:text-sm">{task.description}</p>
                         </div>
                         <div className="flex items-center justify-between border border-(--form-grey) rounded-lg gap-2">
                             <div className="relative" ref={menuRef}>
@@ -104,9 +104,16 @@ export function TaskEditCard({
                     </div>
                     <button
                         onClick={() => setCommentsOpen((v) => !v)}
-                        className="flex items-center gap-2 text-xs text-(--neutral-grey) cursor-pointer pt-6 border-t border-(--form-grey)"
+                        className="flex items-center gap-2 text-xs text-(--neutral-grey) cursor-pointer py-3 border-t border-(--form-grey)"
                     >
-                        <span>Commentaire{task.comments.length > 1 ? 's' : ''} ({task.comments.length})</span>
+                        <div className='flex flex-row w-full justify-between items-center'>
+                            <span className='text-black'>Commentaire{task.comments.length > 1 ? 's' : ''} ({task.comments.length})</span>
+                            {commentsOpen ? (
+                                <Image src="/up-black-arrow.svg" alt="flèche vers le haut" width={16} height={8} className="w-4 h-2" />
+                            ) : (
+                                <Image src="/down-black-arrow.svg" alt="flèche vers le bas" width={16} height={8} className="w-4 h-2" />
+                            )}
+                        </div>
                     </button>
                 </div>
             </div>
@@ -286,7 +293,7 @@ function CommentsSection({
                     />
                 ))}
             </ul>
-            <form action={action} className="flex flex-col gap-2">
+            <form action={action} className="flex flex-col gap-2 pb-3 lg:pb-0">
                 {state?.message && <ErrorMessage message={state.message} />}
                 <textarea
                     name="content"

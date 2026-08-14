@@ -20,7 +20,6 @@ export function TaskView({
     projects?: Record<string, string>
 }) {
     const [view, setView] = useState<View>('list')
-    tasks.sort((a, b) => ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(a.priority) - ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(b.priority))
     return (
         <div className="flex flex-col w-full gap-7.5 mb-12">
             <div className="flex flex-row gap-4 w-full px-2.5 lg:px-0">

@@ -22,30 +22,30 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     const assignableMembers = getAssignableMembers(project)
 
     return (
-        <div className="mx-25">
-            <div className="flex flex-col gap-3.5 mb-8.5 mt-23">
-                <div className="flex items-center justify-between mb-12.5">
-                    <div className="relative">
-                        <Link className="-translate-x-[calc(100%+16px)] top-0 absolute flex items-center px-4 py-5.5 mr-4 rounded-[10px] bg-white border border-(--form-grey)" href="/projects">
+        <div className="lg:mx-25">
+            <div className="flex flex-col gap-3.5 mb-3.5 lg:mb-8.5 mt-2 lg:mt-23">
+                <div className="flex flex-col gap-2 lg:gap-0 lg:flex-row items-center justify-between mx-2 lg:mx-0 lg:mb-12.5">
+                    <div className="lg:relative flex flex-col gap-2">
+                        <Link className="lg:-translate-x-[calc(100%+16px)] lg:top-0 lg:absolute flex items-center lg:px-4 lg:py-5.5 w-fit lg:w-auto lg:mr-4 rounded-[10px] lg:bg-white lg:border border-(--form-grey)" href="/projects">
                             <Image src="/back-arrow-icon.svg" alt="Back" width={24} height={12} className='h-3 w-6' />
                         </Link>
-                        <div className="flex items-center gap-4">
-                            <h1 className='text-2xl font-semibold'>{project.name}</h1>
+                        <div className="flex flex-col gap-2 lg:flex-row lg:items-center lg:gap-4">
+                            <h1 className='text-xl lg:text-2xl font-semibold'>{project.name}</h1>
                             <div className="flex items-center gap-4">
                                 {canEditProject(userRole) && <EditProjectModal project={project} />}
                                 {canDeleteProject(userRole) && <DeleteProjectButton projectId={project.id} />}
                             </div>
                         </div>
-                        <p className="text-(--neutral-grey) mt-3.5">{project.description}</p>
+                        <p className="text-(--neutral-grey) lg:mt-3.5">{project.description}</p>
                     </div>
                     <CreateTaskModal projectId={project.id} members={assignableMembers} />
                 </div>
-                <div className="flex items-center justify-between gap-4 text-sm text-(--neutral-grey) bg-[#F3F4F6] rounded-[10px] px-6 py-4">
-                    <div className="flex flex-row items-center gap-2">
+                <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-sm text-(--neutral-grey) bg-[#F3F4F6] lg:rounded-[10px] px-6 py-4">
+                    <div className="flex flex-col lg:flex-row items-center gap-2">
                         <span className='text-black text-lg font-semibold'>Contributeurs</span>
                         <span>{project.members.length + 1} personnes</span>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-2 lg:flex gap-2">
                         <div className="flex items-center gap-1">
                             <span
                                 key={project.owner.id}
