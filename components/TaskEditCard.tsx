@@ -48,7 +48,7 @@ export function TaskEditCard({
                     <div className="flex flex-row w-full justify-between items-center mb-3 lg:mb-6">
                         <div>
                             <div className="flex flex-col items-start justify-center lg:flex-row lg:justify-start lg:items-center gap-2 mb-2">
-                                <h4 className="font-semibold text-sm lg:text-lg">{task.title}</h4>
+                                <h3 className="font-semibold text-sm lg:text-lg">{task.title}</h3>
                                 <span className={`h-fit text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
                                     {STATUS_LABELS[task.status]}
                                 </span>
@@ -191,7 +191,7 @@ function TaskEditModal({
                     </select>
                 </div>
                 <div className="flex flex-col w-full" ref={assigneesRef}>
-                    <label className="mb-2">Assigné à :</label>
+                    <span className="mb-2">Assigné à :</span>
                     <div className="relative">
                         <button
                             type="button"
@@ -206,44 +206,45 @@ function TaskEditModal({
                                 : 'Sélectionner des membres'}
                         </button>
                         <div className={`absolute z-10 mt-1 w-full max-h-48 overflow-auto border border-(--form-grey) rounded bg-white ${assigneesOpen ? 'block' : 'hidden'}`}>
-                            {members.map((member) => (
-                                <label key={member.id} className="flex items-center gap-2 text-sm px-3 py-2 cursor-pointer hover:bg-(--form-grey)">
-                                    <input
-                                        type="checkbox"
-                                        name="assigneeIds"
-                                        value={member.user.id}
-                                        checked={selectedAssignees.includes(member.user.id)}
-                                        onChange={() => toggleAssignee(member.user.id)}
-                                    />
-                                    {member.user.name}
-                                </label>
-                            ))}
+                            <fieldset>
+                                <legend className="sr-only">Membres assignables</legend>
+                                {members.map((member) => (
+                                    <label key={member.id} className="flex items-center gap-2 text-sm px-3 py-2 cursor-pointer hover:bg-(--form-grey)">
+                                        <input
+                                            type="checkbox"
+                                            name="assigneeIds"
+                                            value={member.user.id}
+                                            checked={selectedAssignees.includes(member.user.id)}
+                                            onChange={() => toggleAssignee(member.user.id)}
+                                        />
+                                        {member.user.name}
+                                    </label>
+                                ))}
+                            </fieldset>
                         </div>
                     </div>
                 </div>
-                <div className="gap-4 flex flex-col mb-8">
-                    <label>Statut :</label>
-                    <div className="flex flex-row gap-2">
-                        <label htmlFor="todo" className="cursor-pointer">
-                            <input id='todo' className='hidden peer' type="radio" name="status" value="TODO" defaultChecked={task.status === 'TODO'} />
-                            <span className="flex items-center gap-2 text-sm text-(--error-red) bg-(--error-red-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--error-red)">
-                                À faire
-                            </span>
-                        </label>
-                        <label htmlFor="in-progress" className="cursor-pointer">
-                            <input id='in-progress' className='hidden peer' type="radio" name="status" value="IN_PROGRESS" defaultChecked={task.status === 'IN_PROGRESS'} />
-                            <span className="flex items-center gap-2 text-sm text-(--warning-orange) bg-(--warning-orange-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--warning-orange)">
-                                En cours
-                            </span>
-                        </label>
-                        <label htmlFor="done" className="cursor-pointer">
-                            <input id='done' className='hidden peer' type="radio" name="status" value="DONE" defaultChecked={task.status === 'DONE'} />
-                            <span className="flex items-center gap-2 text-sm text-(--success-green) bg-(--success-green-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--success-green)">
-                                Terminée
-                            </span>
-                        </label>
-                    </div>
-                </div>
+                <fieldset className="flex flex-row gap-2 mb-8">
+                    <legend>Statut :</legend>
+                    <label htmlFor="todo" className="cursor-pointer">
+                        <input id='todo' className='hidden peer' type="radio" name="status" value="TODO" defaultChecked={task.status === 'TODO'} />
+                        <span className="flex items-center gap-2 text-sm text-(--error-red) bg-(--error-red-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--error-red)">
+                            À faire
+                        </span>
+                    </label>
+                    <label htmlFor="in-progress" className="cursor-pointer">
+                        <input id='in-progress' className='hidden peer' type="radio" name="status" value="IN_PROGRESS" defaultChecked={task.status === 'IN_PROGRESS'} />
+                        <span className="flex items-center gap-2 text-sm text-(--warning-orange) bg-(--warning-orange-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--warning-orange)">
+                            En cours
+                        </span>
+                    </label>
+                    <label htmlFor="done" className="cursor-pointer">
+                        <input id='done' className='hidden peer' type="radio" name="status" value="DONE" defaultChecked={task.status === 'DONE'} />
+                        <span className="flex items-center gap-2 text-sm text-(--success-green) bg-(--success-green-light) rounded-full px-4 py-1 peer-checked:border peer-checked:border-(--success-green)">
+                            Terminée
+                        </span>
+                    </label>
+                </fieldset>
                 <button className={`text-white bg-(--button-grey) rounded-[10px] w-fit px-4.5 py-3.75 cursor-pointer ${pending ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={pending}>
                     {pending ? 'Enregistrement...' : 'Enregistrer'}
                 </button>
@@ -295,7 +296,9 @@ function CommentsSection({
             </ul>
             <form action={action} className="flex flex-col gap-2 pb-3 lg:pb-0">
                 {state?.message && <ErrorMessage message={state.message} />}
+                <label htmlFor="content" className="sr-only">Ajouter un commentaire</label>
                 <textarea
+                    id="content"
                     name="content"
                     rows={2}
                     placeholder="Ajouter un commentaire"

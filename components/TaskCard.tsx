@@ -149,7 +149,9 @@ function CommentsSection({
             </ul>
             <form action={action} className="flex flex-col gap-2">
                 {state?.message && <ErrorMessage message={state.message} />}
+                <label htmlFor="content">Commentaire</label>
                 <textarea
+                    id="content"
                     name="content"
                     rows={2}
                     placeholder="Ajouter un commentaire"

@@ -20,7 +20,7 @@ export function ProjectCard({ project, tasks }: { project: Project, tasks?: Proj
                 <span className='text-[10px]'>{tasks ? (tasks.filter(task => task.status === 'DONE')).length : 1}/{tasks ? tasks.length : 1} tâche{tasks && (tasks.filter(task => task.status === 'DONE')).length > 1 ? 's' : ''} terminée{tasks && (tasks.filter(task => task.status === 'DONE')).length > 1 ? 's' : ''}</span>
             </div>
             <div className="flex items-center justify-left gap-2">
-                <Image src="/team-icon.svg" alt="Équipe" width={11} height={11} />
+                <Image src="/team-icon.svg" alt="Logo de groupe" width={11} height={11} />
                 <span className='text-[10px]'>Équipe ({project.members.length + 1})</span>
             </div>
             <div className="flex items-center justify-left text-xs gap-1.25 text-black">

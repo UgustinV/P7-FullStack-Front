@@ -41,7 +41,10 @@ export function List({
                     </div>
                     <div className="flex flex-row gap-4">
                         <div className="relative w-full">
+                            <label htmlFor="search" className="sr-only">Rechercher une tâche</label>
                             <input
+                                id="search"
+                                name="search"
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}

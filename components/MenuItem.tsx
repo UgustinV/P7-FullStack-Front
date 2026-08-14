@@ -7,10 +7,11 @@ interface MenuItemProps {
     href: string;
     logo: string;
     text: string;
+    alt: string;
     isActive: boolean;
 }
 
-export function MenuItem({ href, logo, text, isActive }: MenuItemProps) {
+export function MenuItem({ href, logo, text, alt, isActive }: MenuItemProps) {
   return (
     <Link
         href={href}
@@ -18,7 +19,7 @@ export function MenuItem({ href, logo, text, isActive }: MenuItemProps) {
     >
         <Image
             src={isActive ? logo.replace(".svg", "-selected.svg") : logo}
-            alt={text}
+            alt={alt}
             width={20}
             height={20}
             className="w-5 h-5"

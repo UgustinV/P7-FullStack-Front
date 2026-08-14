@@ -40,17 +40,19 @@ export function TaskEditView({
                         onClick={() => setView('list')}
                         className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'list' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                     >
-                        <Image src="/list-icon.svg" alt="Liste" width={16} height={16} className="w-4 h-4" />
+                        <Image src="/list-icon.svg" alt="Icone de case cochée" width={16} height={16} className="w-4 h-4" />
                         <span>Liste</span>
                     </button>
                     <button
                         onClick={() => setView('calendar')}
                         className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'calendar' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                     >
-                        <Image src="/calendar-icon.svg" alt="Calendrier" width={16} height={16} className="w-4 h-4" />
+                        <Image src="/calendar-icon.svg" alt="Icone de calendrier" width={16} height={16} className="w-4 h-4" />
                         <span>Calendrier</span>
                     </button>
+                    <label htmlFor="task-status" className="sr-only">Trier les status</label>
                     <select
+                        id="task-status"
                         className="border border-(--form-grey) text-(--neutral-grey) rounded-lg px-8 py-3.75 cursor-pointer"
                         value={selectedStatus}
                         onChange={(e) => setSelectedStatus(e.target.value as 'TODO' | 'IN_PROGRESS' | 'DONE')}
@@ -62,7 +64,9 @@ export function TaskEditView({
                     </select>
                     <div className="flex flex-row gap-4">
                     <div className="relative w-full">
+                        <label htmlFor="task-search" className="sr-only">Rechercher une tâche</label>
                         <input
+                            id="task-search"
                             type="text"
                             className="w-full border border-(--form-grey) rounded-lg pl-8 pr-[6vw] py-4 lg:py-6 text-sm"
                             placeholder="Rechercher une tâche"

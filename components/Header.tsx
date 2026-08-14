@@ -14,19 +14,17 @@ export function Header({ name }: { name?: string }) {
     return (
         <header className="h-20 md:h-24 flex items-center px-4 sm:px-8 lg:px-25 shadow-lg/3 relative">
             <nav className="flex items-center justify-between w-full">
-                <Link href="/dashboard" className="shrink-0">
-                    <Image
-                        src="/logo.svg"
-                        alt="Logo"
-                        width={150}
-                        height={19}
-                        className="w-28 h-auto md:w-37.5 md:h-4.75"
-                    />
-                </Link>
+                <Image
+                    src="/logo.svg"
+                    alt="Logo de haut de page"
+                    width={150}
+                    height={19}
+                    className="w-28 h-auto md:w-37.5 md:h-4.75"
+                />
 
                 <div className="hidden md:flex items-center gap-4">
-                    <MenuItem href="/dashboard" logo="/dashboard.svg" text="Tableau de bord" isActive={pathname === "/dashboard"} />
-                    <MenuItem href="/projects" logo="/projects.svg" text="Projets" isActive={pathname.startsWith("/projects")} />
+                    <MenuItem href="/dashboard" logo="/dashboard.svg" text="Tableau de bord" alt="Icone de tableau de bord" isActive={pathname === "/dashboard"} />
+                    <MenuItem href="/projects" logo="/projects.svg" text="Projets" alt="Icone de dossier" isActive={pathname.startsWith("/projects")} />
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -59,8 +57,8 @@ export function Header({ name }: { name?: string }) {
 
             {menuOpen && (
                 <div className="md:hidden absolute top-full left-0 right-0 bg-white shadow-lg/3 flex flex-col gap-2 p-4 z-20">
-                    <MenuItem href="/dashboard" logo="/dashboard.svg" text="Tableau de bord" isActive={pathname === "/dashboard"} />
-                    <MenuItem href="/projects" logo="/projects.svg" text="Projets" isActive={pathname.startsWith("/projects")} />
+                    <MenuItem href="/dashboard" logo="/dashboard.svg" text="Tableau de bord" alt="Icone de tableau de bord mobile" isActive={pathname === "/dashboard"} />
+                    <MenuItem href="/projects" logo="/projects.svg" text="Projets" alt="Icone de dossier mobile" isActive={pathname.startsWith("/projects")} />
                 </div>
             )}
         </header>

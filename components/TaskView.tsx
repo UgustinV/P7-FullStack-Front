@@ -27,14 +27,14 @@ export function TaskView({
                     onClick={() => setView('list')}
                     className={`flex flex-row w-1/2 lg:w-fit justify-center items-center gap-2.5 text-sm lg:text-lg text-(--dark-orange) py-2 lg:px-4 lg:py-3.5 rounded-lg ${view === 'list' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                 >
-                    <Image src="/list-icon.svg" alt="Liste" width={16} height={16} className="w-4 h-4" />
+                    <Image src="/list-icon.svg" alt="Icone de liste" width={16} height={16} className="w-4 h-4" />
                     <span>Liste</span>
                 </button>
                 <button
                     onClick={() => setView('kanban')}
                     className={`flex flex-row w-1/2 lg:w-fit justify-center items-center gap-2.5 text-sm lg:text-lg text-(--dark-orange) py-2 lg:px-4 lg:py-3.5 rounded-lg ${view === 'kanban' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                 >
-                    <Image src="/calendar-icon.svg" alt="Kanban" width={16} height={16} className="w-4 h-4" />
+                    <Image src="/calendar-icon.svg" alt="Icone de calendrier" width={16} height={16} className="w-4 h-4" />
                     <span>Kanban</span>
                 </button>
             </div>
