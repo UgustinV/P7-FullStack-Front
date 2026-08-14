@@ -14,7 +14,7 @@ export default async function DashboardPage() {
                     <h1 className='text-xl lg:text-2xl font-semibold'>Tableau de bord</h1>
                     <h2 className='lg:text-lg'>Bonjour {user?.user.name}, voici un aperçu de vos projets et tâches</h2>
                 </div>
-                <div>
+                <div className='w-full lg:w-auto'>
                     <CreateProjectModal />
                 </div>
             </div>

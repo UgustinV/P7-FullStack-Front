@@ -6,8 +6,8 @@ export default async function Projects() {
     const projects = await getProjects()
     const tasks = await Promise.all(projects.map(project => getProjectTasks(project.id)))
     return (
-        <div className="mx-25">
-            <div className='flex justify-between items-center mt-23 mb-15'>
+        <div className="lg:mx-25">
+            <div className='flex justify-between items-center mt-4 mx-2 lg:mt-23 lg:mb-15'>
                 <div className='flex flex-col gap-3.5'>
                     <h1 className='text-2xl font-semibold'>Mes projets</h1>
                     <h2>Gérer mes projets</h2>

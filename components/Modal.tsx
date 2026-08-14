@@ -7,7 +7,7 @@ export function Modal({
     onClose,
     title,
     children,
-    className = 'py-20 px-18.5 w-1/3',
+    className = 'py-20 px-18.5 lg:w-1/3',
 }: {
     open: boolean
     onClose: () => void

@@ -7,11 +7,11 @@ export function ProjectCard({ project, tasks }: { project: Project, tasks?: Proj
     return (
         <Link
             href={`/projects/${project.id}`}
-            className="flex flex-col gap-2 rounded-[10px] border border-(--form-grey) text-(--neutral-grey) p-4 bg-white"
+            className="flex flex-col gap-2 lg:rounded-[10px] border-t border-b lg:border border-(--form-grey) text-(--neutral-grey) p-4 bg-white"
         >
             <h3 className="font-semibold text-lg text-black">{project.name}</h3>
             <p className="text-sm">{project.description}</p>
-            <div className="my-14">
+            <div className="lg:my-14">
                 <div className="flex items-center justify-between text-xs">
                     <span>Progression</span>
                     <span className='text-black'>{tasks ? Math.round((tasks.filter(task => task.status === 'DONE')).length / tasks.length * 100) : 100}%</span>
