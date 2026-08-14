@@ -153,9 +153,9 @@ export function EditProjectModal({ project }: { project: Project }) {
                                 </div>
                             )}
                         </div>
-                        <div className="flex flex-wrap gap-2 mt-2 mb-2">
+                        <div className="flex flex-col gap-2 my-2">
                             {contributors.map((user) => (
-                                <div key={user.id} className="flex items-center gap-2 text-xs bg-(--light-orange) rounded-full px-3 py-1">
+                                <div key={user.id} className="flex items-center justify-between  text-sm text-(--neutral-grey) rounded-[10px] px-3 py-2.5 border border-(--form-grey)">
                                     <span>{user.name}</span>
                                     <select
                                         name="role"
@@ -163,7 +163,7 @@ export function EditProjectModal({ project }: { project: Project }) {
                                         value={roles[user.id] ?? 'CONTRIBUTOR'}
                                         disabled={isPending}
                                         onChange={(e) => changeRole(user, e.target.value)}
-                                        className="bg-(--light-orange) border-none text-(--neutral-grey) cursor-pointer"
+                                        className="border border-(--form-grey) text-(--neutral-grey) py-2 px-1 rounded-md cursor-pointer"
                                     >
                                         <option value="CONTRIBUTOR">Contributor</option>
                                         <option value="ADMIN">Admin</option>
