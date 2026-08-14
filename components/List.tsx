@@ -17,9 +17,9 @@ export function List({
     isEditView?: boolean
 }) {
     return (
-        <div className={`flex flex-col w-full gap-4 ${isEditView ? '' : 'bg-white rounded-lg px-15 py-10 border border-(--form-grey)'}`}>
+        <div className={`flex flex-col w-full gap-4 ${isEditView ? '' : 'bg-white lg:rounded-lg lg:px-15 lg:py-10 border-t lg:border border-(--form-grey)'}`}>
             {!isEditView && (
-                <div className="flex flex-row justify-between items-center">
+                <div className="flex flex-col justify-start p-2.5 lg:p-0 lg:flex-row lg:justify-between lg:items-center">
                     <div className="flex flex-col gap-1.5 mb-4">
                         <h2 className="text-lg font-semibold">Mes tâches assignées</h2>
                         <h3 className='text-[16px] text-(--neutral-grey)'>Par ordre de priorité</h3>
@@ -28,7 +28,7 @@ export function List({
                         <div className="relative w-full">
                             <input
                                 type="text"
-                                className="w-full border border-(--form-grey) rounded-lg pl-8 pr-[6vw] py-6 text-sm"
+                                className="w-full border border-(--form-grey) rounded-lg pl-8 pr-[6vw] py-3 lg:py-6 text-sm"
                                 placeholder="Rechercher une tâche"
                                 />
                             <Image

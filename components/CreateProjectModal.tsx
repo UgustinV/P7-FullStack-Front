@@ -62,7 +62,7 @@ export function CreateProjectModal() {
         <>
             <button
                 onClick={() => setOpen(true)}
-                className="text-white bg-(--button-grey) rounded-[10px] px-6 py-3 cursor-pointer"
+                className="text-white bg-(--button-grey) rounded-[10px] px-3 py-2.5 text-sm lg:text-base lg:px-6 lg:py-3 cursor-pointer"
             >
                 Créer un projet
             </button>

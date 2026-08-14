@@ -15,7 +15,7 @@ export function Kanban({
     projects?: Record<string, string>
 }) {
     return (
-        <div className="flex flex-row w-full justify-around items-start gap-5">
+        <div className="flex flex-col lg:flex-row w-full justify-around items-start gap-5">
             {BOARD_COLUMNS.map((status) => (
                 <KanbanColumn
                     key={status}

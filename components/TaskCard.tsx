@@ -34,18 +34,18 @@ export function TaskCard({
     const [open, setOpen] = useState(false)
     const dueDate = new Date(task.dueDate).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' })
     return (
-        <div className="flex flex-row justify-between gap-4.5 px-10 py-6.25 border border-(--form-grey) rounded-lg bg-white">
-            <div className="w-full">
+        <div className="flex flex-row justify-between px-2 py-2 lg:gap-4.5 lg:px-10 lg:py-6.25 border-y lg:border border-(--form-grey) lg:rounded-lg bg-white">
+            <div className="w-full flex flex-col items-center lg:block">
                 <div className="flex flex-col justify-start items-start mb-8">
                     <div className="flex flex-row w-full justify-between items-center mb-2">
-                        <h4 className="font-semibold text-lg">{task.title}</h4>
+                        <h4 className="font-semibold text-[16px] lg:text-lg">{task.title}</h4>
                         <span className={`text-xs rounded-full px-4 py-1 ${STATUS_STYLES[task.status]}`}>
                             {STATUS_LABELS[task.status]}
                         </span>
                     </div>
-                    <p className="text-sm text-(--neutral-grey)">{task.description}</p>
+                    <p className="text-xs lg:text-sm text-center text-(--neutral-grey)">{task.description}</p>
                 </div>
-                <div className="flex items-center gap-3.75 text-xs text-(--neutral-grey) mb-8">
+                <div className="flex items-center gap-2 lg:gap-3.75 text-xs text-(--neutral-grey) mb-8">
                     <div className="flex items-center gap-2">
                         <Image src="/folder-icon.svg" alt="project icon" width={16} height={16} className="w-4 h-4" />
                         <span>{projects[task.projectId] ?? task.projectId}</span>
@@ -63,7 +63,7 @@ export function TaskCard({
                 </div>
                 <button
                     onClick={() => setOpen(true)}
-                    className="px-12 py-3.75 rounded-[10px] bg-foreground text-[16px] text-white cursor-pointer"
+                    className="py-2 w-full lg:w-fit lg:px-12 lg:py-3.75 rounded-[10px] bg-foreground text-sm lg:text-[16px] text-white cursor-pointer"
                 >
                     Voir
                 </button>
