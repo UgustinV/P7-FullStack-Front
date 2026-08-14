@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react'
 import { TaskCard } from '@/components/TaskCard'
 import { TaskEditCard } from '@/components/TaskEditCard'
 import { Task, ProjectMember } from '@/app/lib/definitions'
@@ -16,7 +19,18 @@ export function List({
     projects?: Record<string, string>
     isEditView?: boolean
 }) {
-    tasks.sort((a, b) => ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(a.priority) - ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(b.priority))
+    const [searchQuery, setSearchQuery] = useState('')
+
+    const sortedTasks = [...tasks].sort(
+        (a, b) =>
+            ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(a.priority) -
+            ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(b.priority)
+    )
+
+    const filteredTasks = sortedTasks.filter((task) =>
+        task.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+
     return (
         <div className={`flex flex-col w-full gap-4 ${isEditView ? '' : 'bg-white lg:rounded-lg lg:px-15 lg:py-10 border-t lg:border border-(--form-grey)'}`}>
             {!isEditView && (
@@ -29,6 +43,8 @@ export function List({
                         <div className="relative w-full">
                             <input
                                 type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                                 className="w-full border border-(--form-grey) rounded-lg pl-8 pr-[6vw] py-3 lg:py-6 text-sm"
                                 placeholder="Rechercher une tâche"
                                 />
@@ -43,7 +59,7 @@ export function List({
                     </div>
                 </div>
             )}
-            {tasks.map((task) => (
+            {filteredTasks.map((task) => (
                 isEditView ? (
                     <TaskEditCard key={task.id} task={task} members={members} currentUserId={currentUserId} />
                 ) : (

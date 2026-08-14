@@ -22,6 +22,11 @@ export function TaskEditView({
 }) {
     const [view, setView] = useState<View>('list')
     const [selectedStatus, setSelectedStatus] = useState<TaskStatus | "">("")
+    const [searchQuery, setSearchQuery] = useState('')
+
+    const filteredTasks = tasks.filter((task) =>
+        task.title.toLowerCase().includes(searchQuery.toLowerCase())
+    )
 
     return (
         <div className="flex flex-col w-full gap-2 lg:gap-7.5 lg:mb-12 bg-white lg:rounded-[10px] lg:p-6 border-t lg:border border-(--form-grey)">
@@ -61,6 +66,8 @@ export function TaskEditView({
                             type="text"
                             className="w-full border border-(--form-grey) rounded-lg pl-8 pr-[6vw] py-4 lg:py-6 text-sm"
                             placeholder="Rechercher une tâche"
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
                         />
                         <Image
                             src="/search-icon.svg"
@@ -75,7 +82,7 @@ export function TaskEditView({
             </div>
             {view === 'calendar'
                 ? <Calendar tasks={tasks} members={members} currentUserId={currentUserId} projects={projects} />
-                : <List isEditView={true} tasks={selectedStatus !== "" ? tasks.filter(task => task.status === selectedStatus) : tasks} members={members} currentUserId={currentUserId} projects={projects} />}
+                : <List isEditView={true} tasks={selectedStatus !== "" ? filteredTasks.filter(task => task.status === selectedStatus) : filteredTasks} members={members} currentUserId={currentUserId} projects={projects} />}
         </div>
     )
 }
