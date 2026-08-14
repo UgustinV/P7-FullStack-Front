@@ -108,6 +108,7 @@ export async function removeContributor(projectId: string, userId: string) {
 
     revalidatePath(`/projects/${projectId}`)
 }
+
 export async function createProject(_state: ProjectFormState, formData: FormData) {
     const API_URL = process.env.API_URL
     const session = await verifySession()

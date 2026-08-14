@@ -9,13 +9,6 @@ import { Task, TaskComment, ProjectMember, STATUS_LABELS, TaskPriority } from '@
 import { getInitials } from '@/app/lib/utils'
 import { FormField } from '@/components/FormField'
 
-const PRIORITY_LABELS: Record<TaskPriority, string> = {
-    LOW: 'Basse',
-    MEDIUM: 'Moyenne',
-    HIGH: 'Haute',
-    URGENT: 'Urgente',
-}
-
 const STATUS_STYLES: Record<Task['status'], string> = {
     TODO: 'bg-(--error-red-light) text-(--error-red)',
     IN_PROGRESS: 'bg-(--warning-orange-light) text-(--warning-orange)',

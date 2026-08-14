@@ -20,7 +20,7 @@ export function FormField({ label, id, type, name, placeholder, required, error,
                 placeholder={placeholder}
                 required={required}
                 defaultValue={defaultValue}
-                className="border border-(--form-grey) rounded px-3 py-3 mb-2"
+                className="border border-(--form-grey) text-(--neutral-grey) rounded px-3 py-3 mb-2"
             />
             {error && <ErrorMessage message={error.join(', ')} />}
         </div>

@@ -17,6 +17,13 @@ export function EditProjectModal({ project }: { project: Project }) {
     const [contributors, setContributors] = useState<User[]>(
         project.members.filter((m) => m.role !== 'OWNER').map((m) => m.user)
     )
+    const [roles, setRoles] = useState<Record<string, string>>(
+        Object.fromEntries(
+            project.members
+                .filter((m) => m.role !== 'OWNER')
+                .map((m) => [m.user.id, m.role])
+        )
+    )
     const [query, setQuery] = useState('')
     const [results, setResults] = useState<User[]>([])
     const [dropdownOpen, setDropdownOpen] = useState(false)
@@ -65,6 +72,17 @@ export function EditProjectModal({ project }: { project: Project }) {
         }
     }
 
+    function changeRole(user: User, role: string) {
+        setRoles((prev) => ({ ...prev, [user.id]: role }))
+        startTransition(async () => {
+            await removeContributor(project.id, user.id)
+            const formData = new FormData()
+            formData.set('email', user.email)
+            formData.set('role', role)
+            await addContributor(project.id, undefined, formData)
+        })
+    }
+
     return (
         <>
             <button onClick={() => setOpen(true)} className="text-sm text-(--dark-orange) underline cursor-pointer">
@@ -97,10 +115,10 @@ export function EditProjectModal({ project }: { project: Project }) {
                             <button
                                 type="button"
                                 onClick={() => setDropdownOpen((v) => !v)}
-                                className="w-full text-left border border-(--form-grey) rounded px-3 py-3 cursor-pointer"
+                                className="w-full text-left border border-(--form-grey) text-(--neutral-grey) rounded px-3 py-3 cursor-pointer"
                             >
                                 {contributors.length > 0
-                                    ? `${contributors.length} sélectionné(s)`
+                                    ? `${contributors.length} collaborateur${contributors.length > 1 ? 's' : ''}`
                                     : 'Choisir un ou plusieurs contributeurs'}
                             </button>
                             {dropdownOpen && (
@@ -137,8 +155,19 @@ export function EditProjectModal({ project }: { project: Project }) {
                         </div>
                         <div className="flex flex-wrap gap-2 mt-2 mb-2">
                             {contributors.map((user) => (
-                                <span key={user.id} className="flex items-center gap-2 text-xs bg-(--light-orange) rounded-full px-3 py-1">
-                                    {user.name}
+                                <div key={user.id} className="flex items-center gap-2 text-xs bg-(--light-orange) rounded-full px-3 py-1">
+                                    <span>{user.name}</span>
+                                    <select
+                                        name="role"
+                                        id={`roles-${user.id}`}
+                                        value={roles[user.id] ?? 'CONTRIBUTOR'}
+                                        disabled={isPending}
+                                        onChange={(e) => changeRole(user, e.target.value)}
+                                        className="bg-(--light-orange) border-none text-(--neutral-grey) cursor-pointer"
+                                    >
+                                        <option value="CONTRIBUTOR">Contributor</option>
+                                        <option value="ADMIN">Admin</option>
+                                    </select>
                                     <button
                                         type="button"
                                         disabled={isPending}
@@ -147,7 +176,7 @@ export function EditProjectModal({ project }: { project: Project }) {
                                     >
                                         ✕
                                     </button>
-                                </span>
+                                </div>
                             ))}
                         </div>
                     </div>
