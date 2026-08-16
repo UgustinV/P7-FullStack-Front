@@ -17,6 +17,16 @@ export const verifySession = cache(async () => {
     return { isAuth: true, token: session.token }
 })
 
+export const getSession = async () => {
+    const cookie = (await cookies()).get('session')?.value
+    console.log('cookie value:', cookie)
+    const session = await decrypt(cookie)
+    if (!session?.token) {
+        return null
+    }
+    return session
+}
+
 export const getUser = cache(async () => {
     const API_URL = process.env.API_URL
     const session = await verifySession()

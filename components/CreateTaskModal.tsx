@@ -38,7 +38,7 @@ export function CreateTaskModal({ projectId, members }: { projectId: string; mem
 
     return (
         <>
-            <button onClick={() => setOpen(true)} className="text-white bg-(--button-grey) rounded-[10px] px-6 py-3 cursor-pointer w-full lg:w-fit">
+            <button onClick={() => setOpen(true)} className="text-white bg-(--button-grey) rounded-[10px] px-6 py-3 cursor-pointer text-nowrap w-full lg:w-fit">
                 Créer une tâche
             </button>
             <Modal open={open} onClose={() => setOpen(false)} title="Créer une tâche">

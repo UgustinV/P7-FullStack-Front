@@ -43,7 +43,7 @@ export function TaskCard({
                             {STATUS_LABELS[task.status]}
                         </span>
                     </div>
-                    <p className="text-xs lg:text-sm text-center text-(--neutral-grey)">{task.description}</p>
+                    <p className="text-xs lg:text-sm text-left text-(--neutral-grey)">{task.description}</p>
                 </div>
                 <div className="flex items-center gap-2 lg:gap-3.75 text-xs text-(--neutral-grey) mb-8">
                     <div className="flex items-center gap-2">
@@ -63,7 +63,7 @@ export function TaskCard({
                 </div>
                 <button
                     onClick={() => setOpen(true)}
-                    className="py-2 w-full lg:w-fit lg:px-12 lg:py-3.75 rounded-[10px] bg-foreground text-sm lg:text-[16px] text-white cursor-pointer"
+                    className="py-2 w-full md:w-fit md:px-12 md:py-3.75 rounded-[10px] bg-foreground text-sm lg:text-[16px] text-white cursor-pointer"
                 >
                     Voir
                 </button>

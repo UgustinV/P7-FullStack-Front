@@ -7,12 +7,12 @@ export default async function Account() {
     const user = await getUser();
 
     if (!user) {
-        logout();
+        await logout();
         return redirect("/login");
     }
 
     return (
-        <div className='mx-25 mt-23 mb-12 bg-white rounded-[10px] p-6 border border-(--form-grey)'>
+        <div className='md:mx-25 md:mt-23 md:mb-12 w-full bg-white rounded-[10px] p-6 md:border border-(--form-grey)'>
             <div className='flex justify-between items-center mb-15'>
                 <div className='flex flex-col gap-3.5'>
                     <h1 className='text-2xl font-semibold'>Mon compte</h1>

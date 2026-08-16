@@ -7,7 +7,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
   return (
     <>
         <Header name={user?.user.name} />
-        <main className="flex-1">
+        <main className="flex flex-1">
             {children}
         </main>
         <Footer />

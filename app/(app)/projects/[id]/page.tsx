@@ -22,7 +22,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
     const assignableMembers = getAssignableMembers(project)
 
     return (
-        <div className="lg:mx-25">
+        <div className="lg:mx-25 w-full">
             <div className="flex flex-col gap-3.5 mb-3.5 lg:mb-8.5 mt-2 lg:mt-23">
                 <div className="flex flex-col gap-2 lg:gap-0 lg:flex-row items-center justify-between mx-2 lg:mx-0 lg:mb-12.5">
                     <div className="lg:relative flex flex-col gap-2">

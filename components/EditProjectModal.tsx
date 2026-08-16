@@ -88,7 +88,7 @@ export function EditProjectModal({ project }: { project: Project }) {
             <button onClick={() => setOpen(true)} className="text-sm text-(--dark-orange) underline cursor-pointer">
                 Modifier
             </button>
-            <Modal open={open} onClose={() => setOpen(false)} title="Modifier le projet" className="p-8 w-120">
+            <Modal open={open} onClose={() => setOpen(false)} title="Modifier le projet">
                 {state?.message && <ErrorMessage message={state.message} />}
                 <form action={action} className="flex flex-col gap-4">
                     <FormField
