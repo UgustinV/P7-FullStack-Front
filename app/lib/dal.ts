@@ -48,7 +48,7 @@ export const getUser = cache(async () => {
         const data = await response.json()
         return data.data
     } catch (error) {
-        unstable_rethrow(error)
+        unstable_rethrow(error) // Redéclenche l'erreur pour que next la gère correctement
         console.log('Failed to fetch user')
         return null
     }
@@ -76,7 +76,7 @@ export const getAssignedTasks = cache(async (): Promise<Task[]> => {
         const data = await response.json()
         return data.data?.tasks ?? []
     } catch (error) {
-        unstable_rethrow(error)
+        unstable_rethrow(error) // Redéclenche l'erreur pour que next la gère correctement
         console.log('Failed to fetch assigned tasks')
         return []
     }
@@ -104,7 +104,7 @@ export const getProjectsWithTasks = cache(async (): Promise<Project[]> => {
         const data = await response.json()
         return data.data?.projects ?? []
     } catch (error) {
-        unstable_rethrow(error)
+        unstable_rethrow(error) // Redéclenche l'erreur pour que next la gère correctement
         console.log('Failed to fetch projects with tasks')
         return []
     }
@@ -132,7 +132,7 @@ export const getProjects = cache(async (): Promise<Project[]> => {
         const data = await response.json()
         return data.data?.projects ?? []
     } catch (error) {
-        unstable_rethrow(error)
+        unstable_rethrow(error) // Redéclenche l'erreur pour que next la gère correctement
         console.log('Failed to fetch projects')
         return []
     }
@@ -160,7 +160,7 @@ export const getProjectTasks = cache(async (projectId: string): Promise<Task[]> 
         const data = await response.json()
         return data.data?.tasks ?? []
     } catch (error) {
-        unstable_rethrow(error)
+        unstable_rethrow(error) // Redéclenche l'erreur pour que next la gère correctement
         console.log('Failed to fetch project tasks')
         return []
     }
@@ -190,7 +190,7 @@ export const getProject = cache(async (projectId: string): Promise<Project | nul
         const data = await response.json()
         return data.data?.project ?? null
     } catch (error) {
-        unstable_rethrow(error)
+        unstable_rethrow(error) // Redéclenche l'erreur pour que next la gère correctement
         console.log('Failed to fetch project')
         return null
     }

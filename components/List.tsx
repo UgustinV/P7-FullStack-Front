@@ -21,7 +21,7 @@ export function List({
 }) {
     const [searchQuery, setSearchQuery] = useState('')
 
-    const sortedTasks = [...tasks].sort(
+    const sortedTasks = [...tasks].sort( // trie les tâches par priorité en comparant les index des priorités dans un tableau défini : l'ordre des priorités dans l'array est donc important
         (a, b) =>
             ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(a.priority) -
             ['URGENT', 'HIGH', 'MEDIUM', 'LOW'].indexOf(b.priority)

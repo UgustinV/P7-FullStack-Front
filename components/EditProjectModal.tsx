@@ -39,7 +39,7 @@ export function EditProjectModal({ project }: { project: Project }) {
             setResults([])
             return
         }
-        const timeout = setTimeout(async () => {
+        const timeout = setTimeout(async () => { // évite que la recherche se déclenche à chauque charactère tapé, on attend 300ms après le dernier caractère tapé
             const users = await searchUsers(query)
             setResults(users.filter((u) => u.id !== project.ownerId))
         }, 300)

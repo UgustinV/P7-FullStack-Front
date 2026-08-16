@@ -32,7 +32,7 @@ export function CreateProjectModal() {
             setResults([])
             return
         }
-        const timeout = setTimeout(async () => {
+        const timeout = setTimeout(async () => { // évite que la recherche se déclenche à chauque charactère tapé, on attend 300ms après le dernier caractère tapé
             const users = await searchUsers(query)
             setResults(users)
         }, 300)
