@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
@@ -10,6 +10,10 @@ import { getInitials } from "@/app/lib/utils";
 export function Header({ name }: { name?: string }) {
     const [menuOpen, setMenuOpen] = useState(false)
     const pathname = usePathname()
+
+    useEffect(() => {
+        setMenuOpen(false)
+    }, [pathname])
 
     return (
         <header className="h-20 md:h-24 flex items-center px-4 sm:px-8 lg:px-25 shadow-lg/3 relative">

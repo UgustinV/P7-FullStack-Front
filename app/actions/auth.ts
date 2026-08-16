@@ -1,7 +1,6 @@
 'use server'
 import { SignupFormSchema, FormState } from '@/app/lib/definitions'
 import { createSession, deleteSession } from '@/app/lib/session'
-import bcrypt from 'bcryptjs'
 import { redirect } from 'next/navigation'
  
 export async function signup(_state: FormState, formData: FormData) {

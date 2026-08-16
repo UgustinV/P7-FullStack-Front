@@ -19,7 +19,6 @@ export const verifySession = cache(async () => {
 
 export const getSession = async () => {
     const cookie = (await cookies()).get('session')?.value
-    console.log('cookie value:', cookie)
     const session = await decrypt(cookie)
     if (!session?.token) {
         return null
