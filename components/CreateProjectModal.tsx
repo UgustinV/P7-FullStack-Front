@@ -91,6 +91,9 @@ export function CreateProjectModal() {
                         <span className="mb-2">Contributeurs</span>
                         <div className="relative">
                             <button
+                                aria-haspopup="listbox"
+                                aria-expanded={dropdownOpen}
+                                aria-controls="contributor-dropdown"
                                 type="button"
                                 onClick={() => setDropdownOpen((v) => !v)}
                                 className="w-full h-12.5 text-left text-xs text-(--neutral-grey) border border-(--form-grey) rounded px-3 py-3 cursor-pointer"
@@ -100,7 +103,7 @@ export function CreateProjectModal() {
                                     : 'Choisir un ou plusieurs contributeurs'}
                             </button>
                             {dropdownOpen && (
-                                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-(--form-grey) rounded z-10 p-2 flex flex-col gap-2">
+                                <div role="listbox" id="contributor-dropdown" className="absolute top-full left-0 right-0 mt-1 bg-white border border-(--form-grey) rounded z-10 p-2 flex flex-col gap-2">
                                     <label htmlFor="contributor" className="sr-only">Contributeurs</label>
                                     <input
                                         id="contributor"

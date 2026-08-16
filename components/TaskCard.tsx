@@ -1,23 +1,16 @@
 'use client'
 
-import { useActionState, useState } from 'react'
+import { useState } from 'react'
 import Image from 'next/image'
-import { createComment, updateComment } from '@/app/actions/tasks'
-import { ErrorMessage } from '@/components/ErrorMessage'
-import { Task, TaskComment, ProjectMember, STATUS_LABELS, TaskPriority } from '@/app/lib/definitions'
+import { Task, ProjectMember, STATUS_LABELS, STATUS_STYLES, TaskPriority } from '@/app/lib/definitions'
+import { CommentsSection } from '@/components/CommentsSection'
+import { Modal } from '@/components/Modal'
 
 const PRIORITY_LABELS: Record<TaskPriority, string> = {
     LOW: 'Basse',
     MEDIUM: 'Moyenne',
     HIGH: 'Haute',
     URGENT: 'Urgente',
-}
-
-const STATUS_STYLES: Record<Task['status'], string> = {
-    TODO: 'bg-(--error-red-light) text-(--error-red)',
-    IN_PROGRESS: 'bg-(--warning-orange-light) text-(--warning-orange)',
-    DONE: 'bg-(--success-green-light) text-(--success-green)',
-    CANCELLED: 'bg-(--error-red-light) text-(--error-red)',
 }
 
 export function TaskCard({
@@ -92,99 +85,22 @@ function TaskDetailModal({
 }) {
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50" onClick={(e) => { if (e.target === e.currentTarget) onClose() }}>
-            <div className="bg-white rounded-[10px] p-8 w-140 max-h-[85vh] overflow-auto flex flex-col gap-5">
-                <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold">{task.title}</h2>
-                    <button onClick={onClose} aria-label="Fermer" className="cursor-pointer">✕</button>
-                </div>
-                <p>{task.description}</p>
-                <div className="flex gap-6 text-sm text-(--neutral-grey)">
-                    <span>Statut : {STATUS_LABELS[task.status]}</span>
-                    <span>Priorité : {PRIORITY_LABELS[task.priority]}</span>
-                    <span>Échéance : {new Date(task.dueDate).toLocaleDateString('fr-FR')}</span>
-                </div>
-                <div className="text-sm text-(--neutral-grey)">
-                    Assignés : {task.assignees.map((a) => a.user.name).join(', ') || 'Aucun'}
-                </div>
-                <CommentsSection
-                    projectId={task.projectId}
-                    taskId={task.id}
-                    comments={task.comments}
-                    currentUserId={currentUserId}
-                />
+        <Modal open={true} onClose={onClose} title={task.title}>
+            <p>{task.description}</p>
+            <div className="flex gap-6 text-sm text-(--neutral-grey)">
+                <span>Statut : {STATUS_LABELS[task.status]}</span>
+                <span>Priorité : {PRIORITY_LABELS[task.priority]}</span>
+                <span>Échéance : {new Date(task.dueDate).toLocaleDateString('fr-FR')}</span>
             </div>
-        </div>
-    )
-}
-
-function CommentsSection({
-    projectId,
-    taskId,
-    comments,
-    currentUserId,
-}: {
-    projectId: string
-    taskId: string
-    comments: TaskComment[]
-    currentUserId?: string
-}) {
-    const createCommentWithIds = createComment.bind(null, projectId, taskId)
-    const [state, action, pending] = useActionState(createCommentWithIds, undefined)
-
-    return (
-        <div className="flex flex-col gap-3 border-t border-(--form-grey) pt-4">
-            <h3 className="font-semibold">Commentaires</h3>
-            <ul className="flex flex-col gap-3">
-                {comments.map((comment) => (
-                    <CommentItem
-                        key={comment.id}
-                        projectId={projectId}
-                        taskId={taskId}
-                        comment={comment}
-                        canDelete={comment.authorId === currentUserId}
-                        canEdit={comment.authorId === currentUserId}
-                    />
-                ))}
-            </ul>
-            <form action={action} className="flex flex-col gap-2">
-                {state?.message && <ErrorMessage message={state.message} />}
-                <label htmlFor="content">Commentaire</label>
-                <textarea
-                    id="content"
-                    name="content"
-                    rows={2}
-                    placeholder="Ajouter un commentaire"
-                    className="border border-(--form-grey) rounded px-3 py-2 text-sm"
-                />
-                {state?.errors?.content && <ErrorMessage message={state.errors.content.join(', ')} />}
-                <button type="submit" className="self-end px-4 py-2 rounded bg-(--light-orange) text-sm cursor-pointer">
-                    {pending ? 'Envoi...' : 'Commenter'}
-                </button>
-            </form>
-        </div>
-    )
-}
-
-function CommentItem({
-    projectId,
-    taskId,
-    comment,
-}: {
-    projectId: string
-    taskId: string
-    comment: TaskComment
-    canDelete: boolean
-    canEdit: boolean
-}) {
-    const updateCommentWithIds = updateComment.bind(null, projectId, taskId, comment.id)
-
-    return (
-        <li className="flex flex-col gap-1 text-sm">
-            <div className="flex items-center justify-between">
-                <span className="font-medium">{comment.author.name}</span>
+            <div className="text-sm text-(--neutral-grey)">
+                Assignés : {task.assignees.map((a) => a.user.name).join(', ') || 'Aucun'}
             </div>
-            <p>{comment.content}</p>
-        </li>
+            <CommentsSection
+                projectId={task.projectId}
+                taskId={task.id}
+                comments={task.comments}
+                currentUserId={currentUserId}
+            />
+        </Modal>
     )
 }

@@ -4,9 +4,8 @@ import { useActionState, useState, useEffect, useRef } from 'react'
 import { createTask } from '@/app/actions/tasks'
 import { FormField } from '@/components/FormField'
 import { ErrorMessage } from '@/components/ErrorMessage'
-import { Button } from '@/components/Button'
 import { ProjectMember } from '@/app/lib/definitions'
-import { Modal } from './Modal'
+import { Modal } from '@/components/Modal'
 
 export function CreateTaskModal({ projectId, members }: { projectId: string; members: ProjectMember[] }) {
     const [open, setOpen] = useState(false)

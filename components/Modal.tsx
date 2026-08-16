@@ -1,6 +1,6 @@
 'use client'
 
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 export function Modal({
     open,
@@ -14,10 +14,21 @@ export function Modal({
     children: ReactNode
     className?: string
 }) {
+    useEffect(() => {
+        if (!open) return
+        function handleKeyDown(e: KeyboardEvent) {
+            if (e.key === 'Escape') onClose()
+        }
+        document.addEventListener('keydown', handleKeyDown)
+        return () => document.removeEventListener('keydown', handleKeyDown)
+    }, [open, onClose])
+
     if (!open) return null
 
     return (
         <div
+            role="dialog"
+            aria-modal="true"
             className="fixed inset-0 flex items-center justify-center bg-black/40 z-50"
             onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
         >

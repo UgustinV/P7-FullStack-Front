@@ -139,6 +139,13 @@ export const STATUS_LABELS: Record<TaskStatus, string> = {
     CANCELLED: 'Annulée',
 }
 
+export const STATUS_STYLES: Record<Task['status'], string> = {
+    TODO: 'bg-(--error-red-light) text-(--error-red)',
+    IN_PROGRESS: 'bg-(--warning-orange-light) text-(--warning-orange)',
+    DONE: 'bg-(--success-green-light) text-(--success-green)',
+    CANCELLED: 'bg-(--error-red-light) text-(--error-red)',
+}
+
 export const CreateTaskFormSchema = z.object({
     title: z.string().min(2, { error: 'Le titre doit contenir au moins 2 caractères.' }).trim(),
     description: z.string().trim().optional(),

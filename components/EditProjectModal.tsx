@@ -99,7 +99,7 @@ export function EditProjectModal({ project }: { project: Project }) {
                         defaultValue={project.name}
                         required
                         error={state?.errors?.name}
-                    />
+                        />
                     <FormField
                         label="Description*"
                         id="description"
@@ -108,11 +108,14 @@ export function EditProjectModal({ project }: { project: Project }) {
                         defaultValue={project.description}
                         required
                         error={state?.errors?.description}
-                    />
+                        />
                     <div className="flex flex-col w-full" ref={dropdownRef}>
                         <label htmlFor="contributor" className="mb-2">Contributeurs</label>
                         <div className="relative">
                             <button
+                                aria-haspopup="listbox"
+                                aria-expanded={dropdownOpen}
+                                aria-controls="contributor-dropdown"
                                 type="button"
                                 onClick={() => setDropdownOpen((v) => !v)}
                                 className="w-full text-left border border-(--form-grey) text-(--neutral-grey) rounded px-3 py-3 cursor-pointer"
@@ -122,7 +125,7 @@ export function EditProjectModal({ project }: { project: Project }) {
                                     : 'Choisir un ou plusieurs contributeurs'}
                             </button>
                             {dropdownOpen && (
-                                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-(--form-grey) rounded z-10 p-2 flex flex-col gap-2">
+                                <div role="listbox" id="contributor-dropdown" className="absolute top-full left-0 right-0 mt-1 bg-white border border-(--form-grey) rounded z-10 p-2 flex flex-col gap-2">
                                     <input
                                         id="contributor"
                                         type="text"

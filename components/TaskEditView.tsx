@@ -18,7 +18,6 @@ export function TaskEditView({
     members?: ProjectMember[]
     currentUserId?: string
     projects?: Record<string, string>
-    isEditView?: boolean
 }) {
     const [view, setView] = useState<View>('list')
     const [selectedStatus, setSelectedStatus] = useState<TaskStatus | "">("")
@@ -38,6 +37,7 @@ export function TaskEditView({
                 <div className="flex flex-col lg:flex-row w-full lg:w-fit gap-2">
                     <button
                         onClick={() => setView('list')}
+                        aria-pressed={view === 'list'}
                         className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'list' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                     >
                         <Image src="/list-icon.svg" alt="Icone de case cochée" width={16} height={16} className="w-4 h-4" />
@@ -45,6 +45,7 @@ export function TaskEditView({
                     </button>
                     <button
                         onClick={() => setView('calendar')}
+                        aria-pressed={view === 'calendar'}
                         className={`flex flex-row items-center gap-2.5 text-(--dark-orange) px-4 py-3.5 rounded-lg ${view === 'calendar' ? 'bg-(--light-orange)' : 'bg-white cursor-pointer'}`}
                     >
                         <Image src="/calendar-icon.svg" alt="Icone de calendrier" width={16} height={16} className="w-4 h-4" />
