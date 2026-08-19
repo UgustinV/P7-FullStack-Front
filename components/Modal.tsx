@@ -7,10 +7,11 @@ export function Modal({
     onClose,
     title,
     children,
+    className,
 }: {
     open: boolean
     onClose: () => void
-    title: string
+    title: ReactNode
     children: ReactNode
     className?: string
 }) {
@@ -32,7 +33,7 @@ export function Modal({
             className="fixed inset-0 flex items-center justify-center bg-black/40 z-50"
             onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
         >
-            <div className="relative bg-white rounded-[10px] max-h-[95vh] overflow-auto flex flex-col gap-5 py-10 px-8 lg:py-20 lg:px-18.5 w-4/5 lg:w-2/3">
+            <div className={`relative bg-white rounded-[10px] max-h-[95vh] overflow-auto flex flex-col gap-5 py-10 px-8 lg:py-20 lg:px-18.5 w-4/5 lg:w-2/3 ${className ?? ''}`}>
                 <button onClick={onClose} aria-label="Fermer" className="absolute top-9 right-9 cursor-pointer text-xl">✕</button>
                 <h2 className="text-2xl font-semibold">{title}</h2>
                 {children}

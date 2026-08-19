@@ -8,6 +8,7 @@ import { CreateTaskModal } from '@/components/CreateTaskModal'
 import { canEditProject, canDeleteProject, getAssignableMembers, getUserRole } from '@/app/lib/permissions'
 import Link from 'next/dist/client/link'
 import { getInitials } from '@/app/lib/utils'
+import { CreateAiTask } from '@/components/CreateAiTask'
 
 export default async function ProjectPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = await params
@@ -38,7 +39,10 @@ export default async function ProjectPage({ params }: { params: Promise<{ id: st
                         </div>
                         <p className="text-(--neutral-grey) lg:mt-3.5">{project.description}</p>
                     </div>
-                    <CreateTaskModal projectId={project.id} members={assignableMembers} />
+                    <div className="flex flex-col lg:flex-row items-center gap-2 lg:gap-3">
+                        <CreateTaskModal projectId={project.id} members={assignableMembers} />
+                        <CreateAiTask projectId={project.id} />
+                    </div>
                 </div>
                 <div className="flex flex-col lg:flex-row items-center justify-between gap-4 text-sm text-(--neutral-grey) bg-[#F3F4F6] lg:rounded-[10px] px-6 py-4">
                     <div className="flex flex-col lg:flex-row items-center gap-2">
