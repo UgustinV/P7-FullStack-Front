@@ -1,5 +1,10 @@
-export function ErrorMessage({ message }: { message: string }) {
+export function ErrorMessage({ message }: { message: string | string[] }) {
+    const messages = Array.isArray(message) ? message : [message]
     return (
-        <p role="alert" className="text-(--error-red) absolute top-0 left-0 mx-3.5 my-3.5 px-3.5 py-1.5 border border-(--error-red) bg-(--error-red-light) rounded-sm">{message}</p>
+        <div role="alert" className="w-full text-(--error-red) px-2 py-1.5 border border-(--error-red) bg-(--error-red-light) rounded-sm">
+            {messages.map((msg, index) => (
+                <p key={index}>{msg}</p>
+            ))}
+        </div>
     )
 }

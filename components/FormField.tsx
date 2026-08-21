@@ -22,7 +22,9 @@ export function FormField({ label, id, type, name, placeholder, required, error,
                 defaultValue={defaultValue}
                 className="border border-(--form-grey) text-(--neutral-grey) rounded px-3 py-3 mb-2"
             />
-            {error && <ErrorMessage message={error.join(', ')} />}
+            <div className="flex flex-col w-full">
+                {error && <ErrorMessage message={error} />}
+            </div>
         </div>
     )
 }

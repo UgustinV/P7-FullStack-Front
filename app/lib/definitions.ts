@@ -8,11 +8,11 @@ export const SignupFormSchema = z.object({
     email: z.email({ error: 'Veuillez entrer un email valide.' }).trim(),
     password: z
     .string()
-    .min(8, { error: 'Doit contenir au moins 8 caractères.' })
-    .regex(/[a-zA-Z]/, { error: 'Doit contenir au moins une lettre.' })
-    .regex(/[0-9]/, { error: 'Doit contenir au moins un chiffre.' })
+    .min(8, { error: 'Le mot de passe doit contenir au moins 8 caractères.' })
+    .regex(/[a-zA-Z]/, { error: 'Le mot de passe doit contenir au moins une lettre.' })
+    .regex(/[0-9]/, { error: 'Le mot de passe doit contenir au moins un chiffre.' })
     .regex(/[^a-zA-Z0-9]/, {
-        error: 'Doit contenir au moins un caractère spécial.',
+        error: 'Le mot de passe doit contenir au moins un caractère spécial.',
     })
     .trim(),
 })

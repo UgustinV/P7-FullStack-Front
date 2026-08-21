@@ -6,7 +6,7 @@ import { EditProjectModal } from '@/components/EditProjectModal'
 import { DeleteProjectButton } from '@/components/DeleteProjectButton'
 import { CreateTaskModal } from '@/components/CreateTaskModal'
 import { canEditProject, canDeleteProject, getAssignableMembers, getUserRole } from '@/app/lib/permissions'
-import Link from 'next/dist/client/link'
+import Link from 'next/link'
 import { getInitials } from '@/app/lib/utils'
 import { CreateAiTask } from '@/components/CreateAiTask'
 
